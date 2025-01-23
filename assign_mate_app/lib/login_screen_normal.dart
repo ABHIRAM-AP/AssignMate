@@ -14,14 +14,12 @@ class LoginScreenNormal extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Etlab ID TextField
               TextField(
                 decoration: const InputDecoration(
                   hintText: 'Enter Your Etlab ID:',
                 ),
               ),
               const SizedBox(height: 20),
-
               TextField(
                 decoration: const InputDecoration(
                   hintText: 'Enter Rep ID:',
@@ -35,23 +33,20 @@ class LoginScreenNormal extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-              // Login Button
               SizedBox(
-                width: double.infinity, // Matches the width of the parent
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {},
                   child: Text(
                     "Login",
                     style: GoogleFonts.poppins(
-                      fontSize: 16,
+                      fontSize: 17,
                       color: Colors.white,
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Not A Student? I'm A Rep Link
               TextButton(
                 onPressed: () {
                   Navigator.push(

@@ -14,40 +14,33 @@ class LoginScreenRep extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Etlab ID TextField
               TextField(
                 decoration: const InputDecoration(
                   hintText: 'Enter Your Etlab ID:',
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Password TextField
               TextField(
-                obscureText: true, // Hides password input
+                obscureText: true,
                 decoration: const InputDecoration(
                   hintText: 'Enter Password',
                 ),
               ),
               const SizedBox(height: 30),
-
-              // Login Button
               SizedBox(
-                width: double.infinity, // Matches the width of the parent
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {},
                   child: Text(
                     "Login",
                     style: GoogleFonts.poppins(
-                      fontSize: 16,
+                      fontSize: 17,
                       color: Colors.white,
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Not A Student? I'm A Rep Link
               TextButton(
                 onPressed: () {
                   Navigator.push(
