@@ -21,6 +21,12 @@ class LoginScreenRep extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextField(
+                decoration: const InputDecoration(
+                  hintText: 'Enter Rep ID:',
+                ),
+              ),
+              const SizedBox(height: 30),
+              TextField(
                 obscureText: true,
                 decoration: const InputDecoration(
                   hintText: 'Enter Password',
