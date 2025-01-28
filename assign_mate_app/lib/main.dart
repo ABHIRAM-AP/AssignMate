@@ -29,15 +29,18 @@ class MyApp extends StatelessWidget {
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
+          hintStyle: TextStyle(color: Colors.black87),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
           ),
+          filled: true,
+          fillColor: Color(0xFFF5F5F5),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: const LoginScreenNormal(),
+      home: const LoginScreen(),
     );
   }
 }

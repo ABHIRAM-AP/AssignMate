@@ -8,59 +8,84 @@ class LoginScreenRep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: const InputDecoration(
-                  hintText: 'Enter Your Etlab ID:',
+      body: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 50, left: 20),
+              child: Text(
+                "Sign In",
+                style: GoogleFonts.poppins(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-              const SizedBox(height: 20),
-              TextField(
-                decoration: const InputDecoration(
-                  hintText: 'Enter Rep ID:',
-                ),
-              ),
-              const SizedBox(height: 30),
-              TextField(
-                obscureText: true,
-                decoration: const InputDecoration(
-                  hintText: 'Enter Password',
-                ),
-              ),
-              const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Login",
-                    style: GoogleFonts.poppins(
-                      fontSize: 17,
-                      color: Colors.white,
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'Enter Your Etlab ID:',
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginScreenNormal(),
+                  const SizedBox(height: 20),
+                  TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'Enter Rep ID:',
                     ),
-                  );
-                },
-                child: const Text("Not A Rep? I'm A Student"),
+                  ),
+                  const SizedBox(height: 30),
+                  TextField(
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter Password',
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Login",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Not A Rep? I'm A Student",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AssignmentsScreen extends StatelessWidget {
-  final bool isClassRep;
-  const AssignmentsScreen({super.key, required this.isClassRep});
+  // final bool isClassRep;
+  const AssignmentsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
