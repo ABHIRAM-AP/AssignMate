@@ -9,14 +9,6 @@ class AssignmentsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Assignments"),
-        actions: isClassRep
-            ? [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {},
-                ),
-              ]
-            : null,
       ),
     );
   }
