@@ -1,17 +1,16 @@
-import 'package:assign_mate_app/assignments_screen.dart';
-import 'package:assign_mate_app/login_screen_rep.dart';
+import 'package:assign_mate_app/screens/assignments_screen.dart';
+import 'package:assign_mate_app/screens/login_screen_normal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class LoginScreenRep extends StatelessWidget {
+  const LoginScreenRep({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // "Sign In" text at the top-left
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
@@ -26,37 +25,33 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          // Centered Login Form
           Center(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Etlab ID TextField
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 10),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Enter Your Etlab ID:',
-                      ),
+                  TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'Enter Your Etlab ID:',
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // Password TextField
                   TextField(
-                    obscureText: true, // Hides password input
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
+                      hintText: 'Enter Rep ID:',
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  TextField(
+                    obscureText: true,
+                    decoration: const InputDecoration(
                       hintText: 'Enter Password',
                     ),
                   ),
                   const SizedBox(height: 30),
-
-                  // Login Button
                   SizedBox(
-                    width: double.infinity, // Matches the width of the parent
+                    width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -66,7 +61,7 @@ class LoginScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => const AssignmentsScreen(
-                              isRep: false,
+                              isRep: true,
                             ),
                           ),
                         );
@@ -75,26 +70,24 @@ class LoginScreen extends StatelessWidget {
                         "Login",
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 17,
                           color: Colors.white,
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // Not A Student? I'm A Rep Link
                   TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const LoginScreenRep(),
+                          builder: (context) => const LoginScreen(),
                         ),
                       );
                     },
                     child: Text(
-                      "Not A Student? I'm A Rep",
+                      "Not A Rep? I'm A Student",
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: Colors.white,

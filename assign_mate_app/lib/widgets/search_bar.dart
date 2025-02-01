@@ -16,12 +16,6 @@ class SearchBarAssignments extends StatelessWidget {
         ),
         hintText: "Search Your Assignments",
         hintStyle: GoogleFonts.roboto(fontSize: 14),
-        suffixIcon: Padding(
-          padding: const EdgeInsets.only(right: 30.0),
-          child: Icon(
-            Icons.add,
-          ),
-        ),
         filled: true,
         fillColor: Colors.white,
         border: UnderlineInputBorder(

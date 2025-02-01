@@ -1,4 +1,4 @@
-import 'package:assign_mate_app/login_screen_normal.dart';
+import 'package:assign_mate_app/screens/login_screen_normal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
