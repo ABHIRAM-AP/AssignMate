@@ -17,14 +17,18 @@ class MyApp extends StatelessWidget {
       ).copyWith(
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.black,
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(20),
             ),
           ),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             foregroundColor: Colors.blue,
             textStyle:
                 GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w500),
@@ -37,8 +41,7 @@ class MyApp extends StatelessWidget {
           ),
           filled: true,
           fillColor: Color(0xFFF5F5F5),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
+          contentPadding: EdgeInsets.all(20),
         ),
       ),
       debugShowCheckedModeBanner: false,

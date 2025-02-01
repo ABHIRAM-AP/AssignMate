@@ -1,34 +1,23 @@
+import 'package:assign_mate_app/widgets/assignment_subjects.dart';
 import 'package:assign_mate_app/widgets/search_bar.dart';
+import 'package:assign_mate_app/widgets/util_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 class AssignmentsScreen extends StatefulWidget {
-  const AssignmentsScreen({super.key});
+  final bool isRep;
+  const AssignmentsScreen({super.key, required this.isRep});
 
   @override
   State<AssignmentsScreen> createState() => _AssignmentsScreenState();
 }
 
 class _AssignmentsScreenState extends State<AssignmentsScreen> {
-  List<String> subjects = [
-    'Graph Theory',
-    'COA',
-    'OS',
-    'Digital Lab',
-  ];
-  List<dynamic> subjectdueDate = [
-    DateTime.utc(2025, 11, 9),
-    DateTime.utc(2025, 11, 20),
-    DateTime.utc(2025, 11, 30),
-    DateTime.utc(2025, 11, 10),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(top: 50),
+        padding: const EdgeInsets.only(top: 20),
         child: Column(
           children: [
             Row(
@@ -64,7 +53,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
             ),
             const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Material(
                 elevation: 8,
                 shadowColor: Color.fromRGBO(0, 0, 0, 0.3),
@@ -72,45 +61,38 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                 child: SearchBarAssignments(), // Textfield
               ),
             ),
-            // const SizedBox(height: 10),
             Expanded(
-              child: ListView.builder(
-                itemCount: subjects.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Card(
-                      color: Color.fromARGB(255, 209, 179, 232),
-                      elevation: 8,
-                      child: ListTile(
-                        leading: Icon(
-                          color: Colors.black,
-                          Icons.flag_circle,
-                          size: 35,
-                        ),
-                        title: Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            subjects[index],
+              child: AssignmentSubjects(),
+            ),
+            if (widget.isRep) ...[
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 30, top: 10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        style: ButtonStyle(
+                          elevation: WidgetStatePropertyAll(8),
+                          backgroundColor: WidgetStatePropertyAll(
+                            Color.fromARGB(255, 241, 229, 249),
                           ),
                         ),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0, top: 2),
-                          child: Text(
-                            DateFormat('d,EEEE,MMMM').format(
-                              subjectdueDate[index],
-                            ),
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward,
-                          size: 28,
-                        ),
+                        onPressed: () {
+                          // Action for adding an assignment
+                        },
+                        icon: Icon(Icons.add, size: 30), // Add Button Icon
                       ),
-                    ),
-                  );
-                },
+                    ],
+                  ),
+                ),
               ),
+            ],
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
+              child: UtilTab(), // Home, Bookmark, Settings Tab
             ),
           ],
         ),

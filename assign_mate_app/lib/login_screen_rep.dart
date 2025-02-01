@@ -1,3 +1,4 @@
+import 'package:assign_mate_app/assignments_screen.dart';
 import 'package:assign_mate_app/login_screen_normal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,7 +53,19 @@ class LoginScreenRep extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AssignmentsScreen(
+                              isRep: true,
+                            ),
+                          ),
+                        );
+                      },
                       child: Text(
                         "Login",
                         style: GoogleFonts.poppins(

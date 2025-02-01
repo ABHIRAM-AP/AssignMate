@@ -35,9 +35,12 @@ class LoginScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Etlab ID TextField
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Enter Your Etlab ID:',
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 10),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Enter Your Etlab ID:',
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -57,15 +60,14 @@ class LoginScreen extends StatelessWidget {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
                       ),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const AssignmentsScreen(),
+                            builder: (context) => const AssignmentsScreen(
+                              isRep: false,
+                            ),
                           ),
                         );
                       },
