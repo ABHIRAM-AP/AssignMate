@@ -1,6 +1,5 @@
 import 'package:assign_mate_app/screens/assignments_screen.dart';
 import 'package:assign_mate_app/screens/login_screen_normal.dart';
-import 'package:assign_mate_app/screens/sign_up.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +66,7 @@ class MyApp extends StatelessWidget {
           }
 
           debugPrint("User not logged in");
-          return const SignUpPage();
+          return const LoginScreen();
         },
       ),
     );

@@ -25,15 +25,39 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> loginStudent() async {
+    String email = emailidController.text.trim();
+    String password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please enter both email and password")),
+      );
+      return;
+    }
+
     try {
       final studentCredentials =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailidController.text.trim(),
-        password: passwordController.text.trim(),
+        email: email,
+        password: password,
       );
-      print(studentCredentials);
+
+      if (studentCredentials.user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AssignmentsScreen(isRep: false),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Login failed. Please try again.")),
+        );
+      }
     } on FirebaseAuthException catch (e) {
-      debugPrint(e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? "Login failed. Please try again.")),
+      );
     }
   }
 
@@ -96,14 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       onPressed: () async {
                         await loginStudent();
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AssignmentsScreen(
-                              isRep: false,
-                            ),
-                          ),
-                        );
+
                         debugPrint("Login Pressed");
                       },
                       child: Text(
