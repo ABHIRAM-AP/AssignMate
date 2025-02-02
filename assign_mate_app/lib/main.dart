@@ -1,9 +1,15 @@
+import 'package:assign_mate_app/screens/assignments_screen.dart';
 import 'package:assign_mate_app/screens/login_screen_normal.dart';
+import 'package:assign_mate_app/screens/sign_up.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -45,7 +51,25 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text("Something went wrong!"));
+          }
+
+          if (snapshot.hasData) {
+            debugPrint("User logged in: ${snapshot.data!.email}");
+            return const AssignmentsScreen(isRep: false);
+          }
+
+          debugPrint("User not logged in");
+          return const SignUpPage();
+        },
+      ),
     );
   }
 }

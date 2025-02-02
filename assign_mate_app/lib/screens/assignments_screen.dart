@@ -33,9 +33,12 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
-                controller: assignmentController,
-                decoration: InputDecoration(labelText: "Enter Assignment"),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 14.0),
+                child: TextField(
+                  controller: assignmentController,
+                  decoration: InputDecoration(labelText: "Enter Assignment"),
+                ),
               ),
               TextField(
                 controller: dateController,
@@ -45,38 +48,67 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
             ],
           ),
           actions: [
-            ElevatedButton(
-              onPressed: () {
-                String name = assignmentController.text;
-                String dateString = dateController.text;
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.amber),
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    String name = assignmentController.text;
+                    String dateString = dateController.text;
 
-                if (name.isNotEmpty && dateString.isNotEmpty) {
-                  DateTime? dueDate = DateTime.tryParse(dateString);
-                  if (dueDate != null) {
-                    setState(() {
-                      assignments.add(Assignment(name, dueDate));
-                    });
+                    if (name.isNotEmpty && dateString.isNotEmpty) {
+                      DateTime? dueDate = DateTime.tryParse(dateString);
+                      if (dueDate != null) {
+                        setState(() {
+                          assignments.add(Assignment(name, dueDate));
+                        });
+                        Navigator.of(context).pop();
+                        assignmentController.clear();
+                        dateController.clear();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Invalid date format")),
+                        );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Please fill in all fields")),
+                      );
+                    }
+                  },
+                  child: Text(
+                    "Submit",
+                    style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.amber),
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
                     Navigator.of(context).pop();
-                    assignmentController.clear();
-                    dateController.clear();
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Invalid date format")),
-                    );
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Please fill in all fields")),
-                  );
-                }
-              },
-              child: Text("Submit"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("Cancel"),
+                  },
+                  child: Text(
+                    "Cancel",
+                    style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+                ),
+              ],
             ),
           ],
         );
@@ -163,7 +195,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-              child: UtilTab(), // Home, Bookmark, Settings Tab
+              child: UtilTab(), // Home, Bookmark, Logout Tab
             ),
           ],
         ),

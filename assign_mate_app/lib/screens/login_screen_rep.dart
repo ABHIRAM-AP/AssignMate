@@ -1,5 +1,6 @@
 import 'package:assign_mate_app/screens/assignments_screen.dart';
 import 'package:assign_mate_app/screens/login_screen_normal.dart';
+import 'package:assign_mate_app/screens/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -71,6 +72,31 @@ class LoginScreenRep extends StatelessWidget {
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
                           fontSize: 17,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    width: double.infinity, // Matches the width of the parent
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                      ),
+                      onPressed: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const SignUpPage(),
+                        //   ),
+                        // );
+                      },
+                      child: Text(
+                        "Sign Up",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                           color: Colors.white,
                         ),
                       ),

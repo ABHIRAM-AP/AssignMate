@@ -1,22 +1,18 @@
-import 'package:assign_mate_app/screens/assignments_screen.dart';
-import 'package:assign_mate_app/screens/login_screen_rep.dart';
-import 'package:assign_mate_app/screens/sign_up.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:assign_mate_app/screens/login_screen_normal.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController emailidController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   @override
   void dispose() {
     emailidController.dispose();
@@ -24,16 +20,16 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Future<void> loginStudent() async {
+  Future<void> createStudent() async {
     try {
       final studentCredentials =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailidController.text.trim(),
         password: passwordController.text.trim(),
       );
-      print(studentCredentials);
+      debugPrint("$studentCredentials");
     } on FirebaseAuthException catch (e) {
-      debugPrint(e.toString());
+      print(e.toString());
     }
   }
 
@@ -48,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Padding(
               padding: const EdgeInsets.only(top: 50, left: 20),
               child: Text(
-                "Sign In",
+                "Sign Up",
                 style: GoogleFonts.poppins(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -87,7 +83,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 30),
 
-                  // Login Button
                   SizedBox(
                     width: double.infinity, // Matches the width of the parent
                     child: ElevatedButton(
@@ -95,41 +90,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 15),
                       ),
                       onPressed: () async {
-                        await loginStudent();
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AssignmentsScreen(
-                              isRep: false,
-                            ),
-                          ),
-                        );
-                        debugPrint("Login Pressed");
-                      },
-                      child: Text(
-                        "Login",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: double.infinity, // Matches the width of the parent
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignUpPage(),
-                          ),
-                        );
+                        try {
+                          await createStudent();
+                          if (context.mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Failed to create student: $e')),
+                          );
+                        }
                       },
                       child: Text(
                         "Sign Up",
@@ -142,25 +118,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // Not A Student? I'm A Rep Link
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreenRep(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "Not A Student? I'm A Rep",
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

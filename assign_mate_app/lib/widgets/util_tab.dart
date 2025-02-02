@@ -1,3 +1,5 @@
+import 'package:assign_mate_app/screens/login_screen_normal.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class UtilTab extends StatelessWidget {
@@ -17,7 +19,18 @@ class UtilTab extends StatelessWidget {
           children: [
             Icon(Icons.home),
             Icon(Icons.bookmark_border),
-            Icon(Icons.settings),
+            IconButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut(); // Logs out the user
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                );
+              },
+              icon: Icon(Icons.logout),
+            ),
           ],
         ),
       ),
