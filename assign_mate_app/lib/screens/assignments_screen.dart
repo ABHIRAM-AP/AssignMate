@@ -1,6 +1,8 @@
 import 'package:assign_mate_app/widgets/photo_button.dart';
 import 'package:assign_mate_app/widgets/search_bar.dart';
 import 'package:assign_mate_app/widgets/util_tab.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -12,9 +14,11 @@ class Assignment {
 }
 
 class AssignmentsScreen extends StatefulWidget {
+  final String? userName;
   final bool isRep;
 
-  const AssignmentsScreen({super.key, required this.isRep});
+  const AssignmentsScreen(
+      {super.key, required this.isRep, required this.userName});
 
   @override
   State<AssignmentsScreen> createState() => _AssignmentsScreenState();
@@ -22,8 +26,25 @@ class AssignmentsScreen extends StatefulWidget {
 
 class _AssignmentsScreenState extends State<AssignmentsScreen> {
   final List<Assignment> assignments = []; // List to hold assignments
+
   final TextEditingController assignmentController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
+
+  Future<void> uploadAssignmentToDatabase(String name, DateTime dueDate) async {
+    try {
+      DocumentReference assignmentRef = await FirebaseFirestore.instance
+          .collection("Assignment_Subjects")
+          .add({
+        "Title": name,
+        "Date": Timestamp.fromDate(dueDate),
+      });
+
+      print("Successfully uploaded: ${assignmentRef.id}");
+    } catch (e) {
+      print("Firestore error: $e");
+    }
+  }
+
   void _addassignment() {
     showDialog(
       context: context,
@@ -60,22 +81,28 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    String name = assignmentController.text;
-                    String dateString = dateController.text;
+                  onPressed: () async {
+                    String name = assignmentController.text.trim();
+                    String dateString = dateController.text.trim();
 
                     if (name.isNotEmpty && dateString.isNotEmpty) {
-                      DateTime? dueDate = DateTime.tryParse(dateString);
-                      if (dueDate != null) {
+                      try {
+                        DateTime dueDate = DateTime.parse(dateString);
+
+                        await uploadAssignmentToDatabase(name, dueDate);
+
                         setState(() {
                           assignments.add(Assignment(name, dueDate));
                         });
+
                         Navigator.of(context).pop();
                         assignmentController.clear();
                         dateController.clear();
-                      } else {
+                      } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Invalid date format")),
+                          SnackBar(
+                              content:
+                                  Text("Invalid date format. Use YYYY-MM-DD.")),
                         );
                       }
                     } else {
@@ -130,7 +157,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   child: Text(
-                    "Welcome\nUser!!",
+                    "Welcome\n${widget.userName}!!",
                     style: GoogleFonts.roboto(
                         letterSpacing: 0,
                         fontSize: 39,

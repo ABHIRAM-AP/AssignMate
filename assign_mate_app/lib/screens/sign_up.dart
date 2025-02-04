@@ -1,4 +1,6 @@
 import 'package:assign_mate_app/screens/login_screen_normal.dart';
+import 'package:assign_mate_app/widgets/email_id_button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,8 +13,14 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController emailidController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  String? _role = 'student';
+
+  void _handleRadioValueChange(String? value) {
+    setState(() {
+      _role = value;
+    });
+  }
+
   @override
   void dispose() {
     emailidController.dispose();
@@ -20,14 +28,43 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-  Future<void> createStudent() async {
+  final TextEditingController emailidController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+// Function For New User
+  // Future<void> createStudent() async {
+  //   try {
+  //     final studentCredentials =
+  //         await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //       email: emailidController.text.trim(),
+  //       password: passwordController.text.trim(),
+  //     );
+  //     debugPrint("$studentCredentials");
+  //   } on FirebaseAuthException catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
+
+  //Function For NEW USER
+  Future<void> SignUpUser(String role) async {
+    String email = emailidController.text.trim();
+    String password = passwordController.text.trim();
     try {
-      final studentCredentials =
+      UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailidController.text.trim(),
-        password: passwordController.text.trim(),
+        email: email,
+        password: password,
       );
-      debugPrint("$studentCredentials");
+      if (userCredential.user != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set({
+          "email": email,
+          "password": password,
+          "role": role == 'rep' ? 'rep' : 'student'
+        });
+      }
     } on FirebaseAuthException catch (e) {
       print(e.toString());
     }
@@ -38,7 +75,6 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // "Sign In" text at the top-left
           Align(
             alignment: Alignment.topLeft,
             child: Padding(
@@ -54,7 +90,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
 
-          // Centered Login Form
+          // Centered SignUp Form
           Center(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
@@ -64,12 +100,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   // Etlab ID TextField
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 10),
-                    child: TextField(
-                      controller: emailidController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter Your Etlab ID:',
-                      ),
-                    ),
+                    child: EmailIdButton(emailidController: emailidController),
                   ),
                   const SizedBox(height: 20),
 
@@ -82,6 +113,48 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   const SizedBox(height: 30),
+                  Row(
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Radio<String>(
+                            value: 'student',
+                            groupValue: _role,
+                            onChanged: _handleRadioValueChange,
+                            activeColor: Colors.red,
+                          ),
+                          Text(
+                            "Student",
+                            style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 100), // Adds a gap between the two rows
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Radio<String>(
+                            value: 'rep',
+                            groupValue: _role,
+                            onChanged: _handleRadioValueChange,
+                            activeColor: Colors.red,
+                          ),
+                          Text(
+                            "Rep",
+                            style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
 
                   SizedBox(
                     width: double.infinity, // Matches the width of the parent
@@ -91,7 +164,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       onPressed: () async {
                         try {
-                          await createStudent();
+                          await SignUpUser(_role!); // Creates New User
                           if (context.mounted) {
                             Navigator.push(
                               context,

@@ -7,7 +7,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
+    print("Firebase Initialized Successfully");
+  } catch (e) {
+    print("Firebase Error: $e");
+  }
+
   runApp(MyApp());
 }
 
@@ -18,6 +24,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          backgroundColor: Color(0xFFCE98F2),
+        ),
         scaffoldBackgroundColor: Color(0xFFCE98F2),
       ).copyWith(
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -62,7 +71,10 @@ class MyApp extends StatelessWidget {
 
           if (snapshot.hasData) {
             debugPrint("User logged in: ${snapshot.data!.email}");
-            return const AssignmentsScreen(isRep: false);
+            return const AssignmentsScreen(
+              isRep: false,
+              userName: null,
+            );
           }
 
           debugPrint("User not logged in");
