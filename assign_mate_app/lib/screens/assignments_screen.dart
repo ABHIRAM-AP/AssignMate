@@ -2,7 +2,7 @@ import 'package:assign_mate_app/widgets/photo_button.dart';
 import 'package:assign_mate_app/widgets/search_bar.dart';
 import 'package:assign_mate_app/widgets/util_tab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -14,17 +14,23 @@ class Assignment {
 }
 
 class AssignmentsScreen extends StatefulWidget {
-  final String? userName;
   final bool isRep;
 
-  const AssignmentsScreen(
-      {super.key, required this.isRep, required this.userName});
+  const AssignmentsScreen({super.key, required this.isRep});
 
   @override
   State<AssignmentsScreen> createState() => _AssignmentsScreenState();
 }
 
 class _AssignmentsScreenState extends State<AssignmentsScreen> {
+  String? userEmail;
+  String? userName;
+  @override
+  void initState() {
+    super.initState();
+    fetchUserName();
+  }
+
   final List<Assignment> assignments = []; // List to hold assignments
 
   final TextEditingController assignmentController = TextEditingController();
@@ -42,6 +48,36 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
       print("Successfully uploaded: ${assignmentRef.id}");
     } catch (e) {
       print("Firestore error: $e");
+    }
+  }
+
+  Future<void> fetchUserName() async {
+    try {
+      // Get the currently logged in user from FirebaseAuth
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null || user.email == null) {
+        setState(() {
+          userName = "Not Logged In";
+        });
+        return;
+      }
+
+      String email = user.email!;
+      String extractedName = email.split('@')[0];
+
+      extractedName =
+          extractedName[0].toUpperCase() + extractedName.substring(1);
+
+      setState(() {
+        userName = extractedName;
+      });
+
+      print("Extracted user name: $userName");
+    } catch (e) {
+      print("Error extracting user name: $e");
+      setState(() {
+        userName = "Error Occurred";
+      });
     }
   }
 
@@ -63,8 +99,27 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
               ),
               TextField(
                 controller: dateController,
-                decoration:
-                    InputDecoration(labelText: "Enter Date (YYYY-MM-DD)"),
+                readOnly: true, // Prevents manual input
+                decoration: InputDecoration(
+                  labelText: "Pick Due Date",
+                  suffixIcon: Icon(Icons.calendar_today),
+                ),
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+
+                  if (pickedDate != null) {
+                    String formattedDate =
+                        DateFormat('yyyy-MM-dd').format(pickedDate);
+                    setState(() {
+                      dateController.text = formattedDate;
+                    });
+                  }
+                },
               ),
             ],
           ),
@@ -77,8 +132,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                     backgroundColor: WidgetStatePropertyAll(Colors.amber),
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
+                          borderRadius: BorderRadius.circular(30)),
                     ),
                   ),
                   onPressed: () async {
@@ -122,8 +176,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                     backgroundColor: WidgetStatePropertyAll(Colors.amber),
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
+                          borderRadius: BorderRadius.circular(30)),
                     ),
                   ),
                   onPressed: () {
@@ -157,7 +210,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   child: Text(
-                    "Welcome\n${widget.userName}!!",
+                    "Welcome\n${userName ?? 'Loading...'}",
                     style: GoogleFonts.roboto(
                         letterSpacing: 0,
                         fontSize: 39,
@@ -183,25 +236,68 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                     SearchBarAssignments(), // Textfield for searching assignments
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: assignments.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 6.0),
-                    child: Card(
-                      elevation: 8,
-                      child: ListTile(
-                        title: Text(assignments[index].name),
-                        subtitle: Text(DateFormat('d, EEEE, MMMM')
-                            .format(assignments[index].dueDate)),
-                        trailing: Icon(Icons.arrow_forward, size: 28),
-                      ),
-                    ),
+            StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('Assignment_Subjects')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
-                },
-              ),
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Center(child: Text("No Assignments Available"));
+                }
+
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var doc = snapshot.data!.docs[index];
+                      var data = doc.data();
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 6.0),
+                        child: Card(
+                          elevation: 8,
+                          child: ListTile(
+                            title: Text(data['Title']),
+                            subtitle: Text(data['Date'] != null
+                                ? DateFormat('d, EEEE, MMMM').format(
+                                    (data['Date'] as Timestamp).toDate())
+                                : "No Date"),
+                            trailing: widget.isRep
+                                ? SizedBox(
+                                    width: 100,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Icon(Icons.arrow_forward, size: 28),
+                                        SizedBox(width: 12),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            await FirebaseFirestore.instance
+                                                .collection(
+                                                    'Assignment_Subjects')
+                                                .doc(doc.id)
+                                                .delete();
+                                          },
+                                          child: Icon(Icons.delete,
+                                              size: 28, color: Colors.red),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Icon(Icons.arrow_forward, size: 28),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
             ),
             if (widget.isRep) ...[
               Align(
@@ -213,7 +309,13 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                       iconColor: WidgetStatePropertyAll(Colors.black),
                       backgroundColor: WidgetStatePropertyAll(Colors.white),
                     ),
-                    onPressed: _addassignment, // Show dialog when pressed
+                    onPressed: () {
+                      setState(
+                        () {
+                          _addassignment();
+                        },
+                      );
+                    },
                     icon: Icon(Icons.add, size: 30),
                   ),
                 ),

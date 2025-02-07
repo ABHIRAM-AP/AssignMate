@@ -14,7 +14,7 @@ class _EmailIdButtonState extends State<EmailIdButton> {
     return TextField(
       controller: widget.emailidController,
       decoration: InputDecoration(
-        hintText: 'Enter Your Etlab ID:',
+        hintText: 'Enter Your Email:',
       ),
       keyboardType: TextInputType.emailAddress,
     );

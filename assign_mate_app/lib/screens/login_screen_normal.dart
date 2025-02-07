@@ -1,5 +1,7 @@
 import 'package:assign_mate_app/screens/assignments_screen.dart';
 import 'package:assign_mate_app/screens/sign_up.dart';
+import 'package:assign_mate_app/widgets/email_id_textfield.dart';
+import 'package:assign_mate_app/widgets/password_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +78,6 @@ class _LoginScreenState extends State<LoginScreen> {
           .signInWithEmailAndPassword(email: email, password: password);
 
       if (userCredential.user != null) {
-        // Successfully logged in
         // print('User logged in: ${userCredential.user!.email}');
 
         // Get the user document from Firestore
@@ -100,7 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
               MaterialPageRoute(
                 builder: (context) => AssignmentsScreen(
                   isRep: true,
-                  userName: name,
                 ),
               ),
             );
@@ -110,26 +110,23 @@ class _LoginScreenState extends State<LoginScreen> {
               MaterialPageRoute(
                 builder: (context) => AssignmentsScreen(
                   isRep: false,
-                  userName: name,
                 ),
               ),
             );
           }
         } else {
-          print('User document not found in Firestore');
+          // print('User document not found in Firestore');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("User document not found in Firestore")),
           );
         }
       }
     } on FirebaseAuthException catch (e) {
-      // Firebase authentication error
       // print('FirebaseAuthException: ${e.code}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.message ?? "Login failed. Please try again.")),
       );
     } catch (e) {
-      // General error
       // print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Something went wrong. Please try again.")),
@@ -160,23 +157,11 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Email TextField
-                TextField(
-                  controller: emailidController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter Your Etlab ID:',
-                  ),
-                ),
-
+                EmailIdButton(emailidController: emailidController),
                 const SizedBox(height: 20),
 
                 // Password TextField
-                TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: 'Enter Password',
-                  ),
-                ),
+                PasswordTextfield(passwordController: passwordController),
                 const SizedBox(height: 30),
 
                 // Login Button

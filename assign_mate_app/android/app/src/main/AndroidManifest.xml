@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="assign_mate_app"
+        android:label="AssignMate"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

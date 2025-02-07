@@ -2,9 +2,14 @@ import 'package:assign_mate_app/screens/login_screen_normal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class UtilTab extends StatelessWidget {
+class UtilTab extends StatefulWidget {
   const UtilTab({super.key});
 
+  @override
+  State<UtilTab> createState() => _UtilTabState();
+}
+
+class _UtilTabState extends State<UtilTab> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -17,8 +22,12 @@ class UtilTab extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Icon(Icons.home),
-            Icon(Icons.bookmark_border),
+            IconButton(
+              onPressed: () {
+                setState(() {});
+              },
+              icon: Icon(Icons.home),
+            ),
             IconButton(
               onPressed: () async {
                 await FirebaseAuth.instance.signOut(); // Logs out the user

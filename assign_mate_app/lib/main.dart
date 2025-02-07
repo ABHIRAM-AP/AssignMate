@@ -25,10 +25,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xFFCE98F2),
+          backgroundColor: const Color(0xFFCE98F2),
+          centerTitle: true,
+          titleTextStyle: GoogleFonts.poppins(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
-        scaffoldBackgroundColor: Color(0xFFCE98F2),
-      ).copyWith(
+        scaffoldBackgroundColor: const Color(0xFFCE98F2),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.black,
@@ -44,18 +49,20 @@ class MyApp extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             foregroundColor: Colors.blue,
-            textStyle:
-                GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w500),
+            textStyle: GoogleFonts.roboto(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
-          hintStyle: TextStyle(color: Colors.black87),
+          hintStyle: const TextStyle(color: Colors.black87),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
           ),
           filled: true,
-          fillColor: Color(0xFFF5F5F5),
-          contentPadding: EdgeInsets.all(20),
+          fillColor: const Color(0xFFF5F5F5),
+          contentPadding: const EdgeInsets.all(20),
         ),
       ),
       debugShowCheckedModeBanner: false,
@@ -66,17 +73,12 @@ class MyApp extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: Text("Something went wrong!"));
+            return const Center(child: Text("Something went wrong!"));
           }
-
           if (snapshot.hasData) {
             debugPrint("User logged in: ${snapshot.data!.email}");
-            return const AssignmentsScreen(
-              isRep: false,
-              userName: null,
-            );
+            return const AssignmentsScreen(isRep: false);
           }
-
           debugPrint("User not logged in");
           return const LoginScreen();
         },
