@@ -20,20 +20,23 @@ class AssignmentsScreen extends StatefulWidget {
 class _AssignmentsScreenState extends State<AssignmentsScreen> {
   String? userEmail;
   String? userName;
+  late final TextEditingController assignmentController;
+  late final TextEditingController dateController;
+  final List<Assignment> assignments = []; // List to hold assignments
+
   @override
   void initState() {
     super.initState();
     fetchUserName();
+    assignmentController = TextEditingController();
+    dateController = TextEditingController();
   }
 
-  final List<Assignment> assignments = []; // List to hold assignments
-
-  final TextEditingController assignmentController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
-
+  // Function to Upload Assignment to FireStore //
   Future<void> uploadAssignmentToDatabase(String name, DateTime dueDate) async {
     try {
-      User? user = FirebaseAuth.instance.currentUser;
+      User? user =
+          FirebaseAuth.instance.currentUser; // Fetches the current User
       if (user == null) {
         print("User not logged in");
         return;
@@ -52,6 +55,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
     }
   }
 
+  // Function For Fetching UserName for Displaying Welcome Message //
   Future<void> fetchUserName() async {
     try {
       // Get the currently logged in user from FirebaseAuth
@@ -66,8 +70,8 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
       String email = user.email!;
       String extractedName = email.split('@')[0];
 
-      extractedName =
-          extractedName[0].toUpperCase() + extractedName.substring(1);
+      extractedName = extractedName[0].toUpperCase() +
+          extractedName.substring(1); // For Welcome ""
 
       setState(() {
         userName = extractedName;
@@ -82,6 +86,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
     }
   }
 
+  // Function to fetch the assignment details from the AlertDialog and return to FireStore
   void _addassignment() {
     showDialog(
       context: context,
@@ -243,6 +248,8 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
             //         // SearchBarAssignments(), // Textfield for searching assignments
             //   ),
             // ),
+
+            // Displays The Assignments from FireStore
             StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('Assignment_Subjects')

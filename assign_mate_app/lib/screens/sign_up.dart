@@ -1,6 +1,7 @@
 import 'package:assign_mate_app/screens/login_screen_normal.dart';
 import 'package:assign_mate_app/widgets/email_id_textfield.dart';
 import 'package:assign_mate_app/widgets/password_textfield.dart';
+import 'package:assign_mate_app/widgets/radio_buttons.dart';
 import 'package:assign_mate_app/widgets/rep_id_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -17,38 +18,27 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   String? _role = 'student';
 
-  void _handleRadioValueChange(String? value) {
-    setState(() {
-      _role = value;
-    });
+  late final TextEditingController emailidController;
+  late final TextEditingController repidController;
+  late final TextEditingController passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    emailidController = TextEditingController();
+    repidController = TextEditingController();
+    passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
     emailidController.dispose();
+    repidController.dispose();
     passwordController.dispose();
     super.dispose();
   }
 
-  final TextEditingController emailidController = TextEditingController();
-  final TextEditingController repidController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-// Function For New User
-  // Future<void> createStudent() async {
-  //   try {
-  //     final studentCredentials =
-  //         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //       email: emailidController.text.trim(),
-  //       password: passwordController.text.trim(),
-  //     );
-  //     debugPrint("$studentCredentials");
-  //   } on FirebaseAuthException catch (e) {
-  //     print(e.toString());
-  //   }
-  // }
-
-  //Function For NEW USER
+  // Function For creating new User //
   Future<void> signUpUser(String role) async {
     String email = emailidController.text.trim();
     String repId = repidController.text.trim();
@@ -62,6 +52,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     try {
+      // Creates User with email and password
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
@@ -69,7 +60,7 @@ class _SignUpPageState extends State<SignUpPage> {
       );
 
       if (userCredential.user != null) {
-        String collection = role == "rep" ? 'Class_Rep' : 'Students';
+        String collection = (role == "rep" ? 'Class_Rep' : 'Students');
 
         await FirebaseFirestore.instance
             .collection(collection)
@@ -84,7 +75,8 @@ class _SignUpPageState extends State<SignUpPage> {
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(e.message ?? "Sign up failed. Please try again.")),
+          content: Text(e.message ?? "Sign up failed. Please try again."),
+        ),
       );
     }
   }
@@ -121,53 +113,29 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 20),
 
                 //Radio Buttons
-                // Student Button
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Radio<String>(
-                          value: 'student',
-                          groupValue: _role,
-                          onChanged: _handleRadioValueChange,
-                          activeColor: Colors.red,
-                        ),
-                        Text(
-                          "Student",
-                          style: GoogleFonts.roboto(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+                    RadioOptionWidget(
+                      text: "Student",
+                      value: "student",
+                      groupValue: _role,
+                      onChanged: (val) => setState(() => _role = val),
                     ),
-                    SizedBox(width: 100), // Adds a gap between the two Button
-                    // Rep Button
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Radio<String>(
-                          value: 'rep',
-                          groupValue: _role,
-                          onChanged: _handleRadioValueChange,
-                          activeColor: Colors.red,
-                        ),
-                        Text(
-                          "Rep",
-                          style: GoogleFonts.roboto(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+                    const SizedBox(width: 20),
+                    RadioOptionWidget(
+                      text: "Rep",
+                      value: "rep",
+                      groupValue: _role,
+                      onChanged: (val) => setState(() => _role = val),
                     ),
                   ],
                 ),
                 const SizedBox(height: 30),
 
+                // Sign Up Button
                 SizedBox(
-                  width: double.infinity, // Matches the width of the parent
+                  width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 15),
@@ -184,10 +152,12 @@ class _SignUpPageState extends State<SignUpPage> {
                           );
                         }
                       } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text('Failed to create student: $e')),
-                        );
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Failed to create student: $e')),
+                          );
+                        }
                       }
                     },
                     child: Text(
