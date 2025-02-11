@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -73,61 +74,57 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     try {
-      // Attempt to log in
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
-      if (userCredential.user != null) {
-        // print('User logged in: ${userCredential.user!.email}');
+      if (userCredential.user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Login failed. Please try again.")),
+        );
+        return;
+      }
 
-        // Get the user document from Firestore
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .get();
+      DocumentSnapshot repDoc = await FirebaseFirestore.instance
+          .collection('Class_Rep')
+          .doc(userCredential.user!.uid)
+          .get();
 
-        if (userDoc.exists) {
-          // Document exists, now fetch the role
-          String userRole = userDoc['role'];
-          // print('User role from Firestore: $userRole');
-          List<String> emailParts = emailidController.text.split("@");
-          String name = emailParts[0];
-          name = name[0].toUpperCase() + name.substring(1);
-          // Compare the fetched role with the selected role
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('Students')
+          .doc(userCredential.user!.uid)
+          .get();
 
-          if (userRole == 'rep') {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AssignmentsScreen(
-                  isRep: true,
-                ),
-              ),
-            );
-          } else {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AssignmentsScreen(
-                  isRep: false,
-                ),
-              ),
-            );
-          }
-        } else {
-          // print('User document not found in Firestore');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("User document not found in Firestore")),
-          );
-        }
+      String? name;
+      if (email.contains("@")) {
+        List<String> emailParts = email.split("@");
+        name = emailParts[0];
+        name = name[0].toUpperCase() + name.substring(1);
+      }
+
+      if (repDoc.exists) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AssignmentsScreen(isRep: true),
+          ),
+        );
+      } else if (userDoc.exists) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AssignmentsScreen(isRep: false),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("User document not found in Firestore")),
+        );
       }
     } on FirebaseAuthException catch (e) {
-      // print('FirebaseAuthException: ${e.code}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.message ?? "Login failed. Please try again.")),
       );
     } catch (e) {
-      // print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Something went wrong. Please try again.")),
       );

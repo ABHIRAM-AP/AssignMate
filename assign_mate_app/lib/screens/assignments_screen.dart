@@ -6,12 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
-class Assignment {
-  final String name;
-  final DateTime dueDate;
-  Assignment(this.name, this.dueDate);
-}
+import 'package:assign_mate_app/models/assignment.dart';
 
 class AssignmentsScreen extends StatefulWidget {
   final bool isRep;
@@ -38,11 +33,17 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
 
   Future<void> uploadAssignmentToDatabase(String name, DateTime dueDate) async {
     try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print("User not logged in");
+        return;
+      }
       DocumentReference assignmentRef = await FirebaseFirestore.instance
           .collection("Assignment_Subjects")
           .add({
         "Title": name,
         "Date": Timestamp.fromDate(dueDate),
+        "repId": user.uid,
       });
 
       print("Successfully uploaded: ${assignmentRef.id}");
@@ -207,35 +208,41 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                  child: Text(
-                    "Welcome\n${userName ?? 'Loading...'}",
-                    style: GoogleFonts.roboto(
-                        letterSpacing: 0,
-                        fontSize: 39,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                  child: PhotoButton(),
-                ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                    child: Expanded(
+                      child: Text(
+                        "Welcome ${userName ?? 'Loading...'}",
+                        style: GoogleFonts.roboto(
+                          letterSpacing: 0,
+                          fontSize: (userName != null && userName!.length >= 7)
+                              ? 35
+                              : 39,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )),
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                //   child: PhotoButton(),
+                // ),
               ],
             ),
             const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Material(
-                elevation: 8,
-                shadowColor: Color.fromRGBO(0, 0, 0, 0.3),
-                borderRadius: BorderRadius.circular(24),
-                child:
-                    SearchBarAssignments(), // Textfield for searching assignments
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 30),
+            //   child: Material(
+            //     elevation: 8,
+            //     shadowColor: Color.fromRGBO(0, 0, 0, 0.3),
+            //     borderRadius: BorderRadius.circular(24),
+            //     child:
+            //         // SearchBarAssignments(), // Textfield for searching assignments
+            //   ),
+            // ),
             StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('Assignment_Subjects')
