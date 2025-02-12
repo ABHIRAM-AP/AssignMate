@@ -32,29 +32,6 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
     dateController = TextEditingController();
   }
 
-  // Function to Upload Assignment to FireStore //
-  Future<void> uploadAssignmentToDatabase(String name, DateTime dueDate) async {
-    try {
-      User? user =
-          FirebaseAuth.instance.currentUser; // Fetches the current User
-      if (user == null) {
-        print("User not logged in");
-        return;
-      }
-      DocumentReference assignmentRef = await FirebaseFirestore.instance
-          .collection("Assignment_Subjects")
-          .add({
-        "Title": name,
-        "Date": Timestamp.fromDate(dueDate),
-        "repId": user.uid,
-      });
-
-      print("Successfully uploaded: ${assignmentRef.id}");
-    } catch (e) {
-      print("Firestore error: $e");
-    }
-  }
-
   // Function For Fetching UserName for Displaying Welcome Message //
   Future<void> fetchUserName() async {
     try {
@@ -83,6 +60,29 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
       setState(() {
         userName = "Error Occurred";
       });
+    }
+  }
+
+  // Function to Upload Assignment to FireStore //
+  Future<void> uploadAssignmentToDatabase(String name, DateTime dueDate) async {
+    try {
+      User? user =
+          FirebaseAuth.instance.currentUser; // Fetches the current User
+      if (user == null) {
+        print("User not logged in");
+        return;
+      }
+      DocumentReference assignmentRef = await FirebaseFirestore.instance
+          .collection("Assignment_Subjects")
+          .add({
+        "Title": name,
+        "Date": Timestamp.fromDate(dueDate),
+        "repId": user.uid,
+      });
+
+      print("Successfully uploaded: ${assignmentRef.id}");
+    } catch (e) {
+      print("Firestore error: $e");
     }
   }
 
