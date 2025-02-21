@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class EmailIdButton extends StatefulWidget {
+class EmailIdTextfield extends StatefulWidget {
   final TextEditingController emailidController;
-  const EmailIdButton({super.key, required this.emailidController});
+  const EmailIdTextfield({super.key, required this.emailidController});
 
   @override
-  State<EmailIdButton> createState() => _EmailIdButtonState();
+  State<EmailIdTextfield> createState() => _EmailIdTextfieldState();
 }
 
-class _EmailIdButtonState extends State<EmailIdButton> {
+class _EmailIdTextfieldState extends State<EmailIdTextfield> {
   @override
   Widget build(BuildContext context) {
     return TextField(

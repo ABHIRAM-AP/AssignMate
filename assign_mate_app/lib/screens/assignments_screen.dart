@@ -18,11 +18,10 @@ class AssignmentsScreen extends StatefulWidget {
 }
 
 class _AssignmentsScreenState extends State<AssignmentsScreen> {
-  String? userEmail;
   String? userName;
   late final TextEditingController assignmentController;
   late final TextEditingController dateController;
-  final List<Assignment> assignments = []; // List to hold assignments
+  final List<Assignment> assignments = [];
 
   @override
   void initState() {
@@ -32,10 +31,8 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
     dateController = TextEditingController();
   }
 
-  // Function For Fetching UserName for Displaying Welcome Message //
   Future<void> fetchUserName() async {
     try {
-      // Get the currently logged in user from FirebaseAuth
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null || user.email == null) {
         setState(() {
@@ -43,56 +40,42 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
         });
         return;
       }
-
-      String email = user.email!;
-      String extractedName = email.split('@')[0];
-
-      extractedName = extractedName[0].toUpperCase() +
-          extractedName.substring(1); // For Welcome ""
-
+      String extractedName = user.email!.split('@')[0];
+      extractedName =
+          extractedName[0].toUpperCase() + extractedName.substring(1);
       setState(() {
         userName = extractedName;
       });
-
-      print("Extracted user name: $userName");
     } catch (e) {
-      print("Error extracting user name: $e");
       setState(() {
         userName = "Error Occurred";
       });
     }
   }
 
-  // Function to Upload Assignment to FireStore //
   Future<void> uploadAssignmentToDatabase(String name, DateTime dueDate) async {
     try {
-      User? user =
-          FirebaseAuth.instance.currentUser; // Fetches the current User
-      if (user == null) {
-        print("User not logged in");
-        return;
-      }
-      DocumentReference assignmentRef = await FirebaseFirestore.instance
-          .collection("Assignment_Subjects")
-          .add({
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+      await FirebaseFirestore.instance.collection("Assignment_Subjects").add({
         "Title": name,
         "Date": Timestamp.fromDate(dueDate),
         "repId": user.uid,
       });
-
-      print("Successfully uploaded: ${assignmentRef.id}");
     } catch (e) {
       print("Firestore error: $e");
     }
   }
 
-  // Function to fetch the assignment details from the AlertDialog and return to FireStore
   void _addassignment() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Enter Assignment Details"),
+          title: Text(
+            "Enter Assignment Details",
+            style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -135,6 +118,9 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
               children: [
                 ElevatedButton(
                   style: ButtonStyle(
+                    padding: WidgetStatePropertyAll(
+                      EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 15),
+                    ),
                     backgroundColor: WidgetStatePropertyAll(Colors.amber),
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
@@ -179,6 +165,9 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
+                    padding: WidgetStatePropertyAll(
+                      EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 15),
+                    ),
                     backgroundColor: WidgetStatePropertyAll(Colors.amber),
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
@@ -209,102 +198,61 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
         padding: const EdgeInsets.only(top: 20),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 10),
-                    child: Expanded(
-                      child: Text(
-                        "Welcome ${userName ?? 'Loading...'}",
-                        style: GoogleFonts.roboto(
-                          letterSpacing: 0,
-                          fontSize: (userName != null && userName!.length >= 7)
-                              ? 35
-                              : 39,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )),
-                // Padding(
-                //   padding:
-                //       const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                //   child: PhotoButton(),
-                // ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 38),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Welcome\n${userName ?? 'Loading...'}",
+                  style: GoogleFonts.roboto(
+                    fontSize:
+                        (userName != null && userName!.length >= 7) ? 35 : 39,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ),
-            const SizedBox(height: 10),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 30),
-            //   child: Material(
-            //     elevation: 8,
-            //     shadowColor: Color.fromRGBO(0, 0, 0, 0.3),
-            //     borderRadius: BorderRadius.circular(24),
-            //     child:
-            //         // SearchBarAssignments(), // Textfield for searching assignments
-            //   ),
-            // ),
-
-            // Displays The Assignments from FireStore
             StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('Assignment_Subjects')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(child: Text("No Assignments Available"));
+                  return const Center(child: Text("No Assignments Available"));
                 }
-
                 return Expanded(
                   child: ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var doc = snapshot.data!.docs[index];
                       var data = doc.data();
-
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 30, vertical: 6.0),
                         child: Card(
+                          color: const Color(0xFFEADDFF),
                           elevation: 8,
                           child: ListTile(
+                            contentPadding: EdgeInsets.all(15),
                             title: Text(data['Title']),
-                            subtitle: Text(data['Date'] != null
-                                ? DateFormat('d, EEEE, MMMM').format(
-                                    (data['Date'] as Timestamp).toDate())
-                                : "No Date"),
+                            subtitle: Text(DateFormat('d, EEEE, MMMM')
+                                .format((data['Date'] as Timestamp).toDate())),
                             trailing: widget.isRep
-                                ? SizedBox(
-                                    width: 100,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Icon(Icons.arrow_forward, size: 28),
-                                        SizedBox(width: 12),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            await FirebaseFirestore.instance
-                                                .collection(
-                                                    'Assignment_Subjects')
-                                                .doc(doc.id)
-                                                .delete();
-                                          },
-                                          child: Icon(Icons.delete,
-                                              size: 28, color: Colors.red),
-                                        ),
-                                      ],
-                                    ),
+                                ? IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: Colors.red),
+                                    onPressed: () async {
+                                      await FirebaseFirestore.instance
+                                          .collection('Assignment_Subjects')
+                                          .doc(doc.id)
+                                          .delete();
+                                    },
                                   )
-                                : Icon(Icons.arrow_forward, size: 28),
+                                : const Icon(Icons.arrow_forward),
                           ),
                         ),
                       );
@@ -320,6 +268,11 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                   padding: const EdgeInsets.only(right: 30, top: 10),
                   child: IconButton(
                     style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                        ),
+                      ),
                       iconColor: WidgetStatePropertyAll(Colors.black),
                       backgroundColor: WidgetStatePropertyAll(Colors.white),
                     ),
@@ -338,7 +291,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-              child: UtilTab(), // Home, Bookmark, Logout Tab
+              child: UtilTab(), // Home, Internal, Logout Tab
             ),
           ],
         ),

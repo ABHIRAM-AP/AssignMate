@@ -1,12 +1,11 @@
 import 'package:assign_mate_app/screens/login_screen_normal.dart';
+import 'package:assign_mate_app/services/firebase_auth_services.dart';
 import 'package:assign_mate_app/widgets/email_id_textfield.dart';
 import 'package:assign_mate_app/widgets/password_textfield.dart';
 import 'package:assign_mate_app/widgets/radio_buttons.dart';
 import 'package:assign_mate_app/widgets/rep_id_textfield.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -21,6 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   late final TextEditingController emailidController;
   late final TextEditingController repidController;
   late final TextEditingController passwordController;
+  final FirebaseAuthService _authService = FirebaseAuthService();
 
   @override
   void initState() {
@@ -38,46 +38,23 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-  // Function For creating new User //
-  Future<void> signUpUser(String role) async {
-    String email = emailidController.text.trim();
-    String repId = repidController.text.trim();
-    String password = passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please enter both email and password")),
-      );
-      return;
-    }
-
+  Future<void> handleSignUp() async {
     try {
-      // Creates User with email and password
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+      await _authService.signUpUser(
+        email: emailidController.text.trim(),
+        password: passwordController.text.trim(),
+        role: _role!,
+        repId: _role == "rep" ? repidController.text.trim() : null,
       );
 
-      if (userCredential.user != null) {
-        String collection = (role == "rep" ? 'Class_Rep' : 'Students');
-
-        await FirebaseFirestore.instance
-            .collection(collection)
-            .doc(userCredential.user!.uid)
-            .set({
-          "email": email,
-          "password": password,
-          "repId": repId,
-          "role": role, // Fixed _role issue
-        });
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
       }
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.message ?? "Sign up failed. Please try again."),
-        ),
-      );
+    } catch (e) {
+      if (context.mounted) print('Failed to create account: $e');
     }
   }
 
@@ -86,7 +63,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Sign Up"),
+        title: const Text("Sign Up"),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -95,24 +72,20 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Etlab ID TextField
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 10),
-                  child: EmailIdButton(emailidController: emailidController),
-                ),
+                // Email ID TextField
+                EmailIdTextfield(emailidController: emailidController),
                 const SizedBox(height: 20),
-                Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 10),
-                    child: _role == 'rep'
-                        ? RepIdTextfield(repidController: repidController)
-                        : Container()),
+
+                // Rep ID TextField (only for "Rep" role)
+                if (_role == 'rep')
+                  RepIdTextfield(repidController: repidController),
                 const SizedBox(height: 20),
 
                 // Password TextField
                 PasswordTextfield(passwordController: passwordController),
                 const SizedBox(height: 20),
 
-                //Radio Buttons
+                // Role Selection (Radio Buttons)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -140,26 +113,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 15),
                     ),
-                    onPressed: () async {
-                      try {
-                        await signUpUser(_role!); // Creates New User
-                        if (context.mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
-                        }
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('Failed to create student: $e')),
-                          );
-                        }
-                      }
-                    },
+                    onPressed: handleSignUp,
                     child: Text(
                       "Sign Up",
                       style: GoogleFonts.poppins(

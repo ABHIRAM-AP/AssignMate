@@ -1,4 +1,7 @@
+import 'package:assign_mate_app/screens/assignments_screen.dart';
+import 'package:assign_mate_app/screens/internals_calc.dart';
 import 'package:assign_mate_app/screens/login_screen_normal.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +13,30 @@ class UtilTab extends StatefulWidget {
 }
 
 class _UtilTabState extends State<UtilTab> {
+  String userRole = "student"; // Default role
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserRole(); // Fetch user role when widget loads
+  }
+
+  Future<void> _getUserRole() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userDoc.exists) {
+        setState(() {
+          userRole = userDoc['role'] ?? "student"; // Default to student
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -22,23 +49,62 @@ class _UtilTabState extends State<UtilTab> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            IconButton(
-              onPressed: () {
-                setState(() {});
-              },
-              icon: Icon(Icons.home),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AssignmentsScreen(
+                          isRep: userRole == "rep", // Pass role dynamically
+                        ),
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.home),
+                ),
+                SizedBox(
+                  height: 0,
+                ),
+                Text("Home"),
+              ],
             ),
-            IconButton(
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut(); // Logs out the user
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginScreen(),
-                  ),
-                );
-              },
-              icon: Icon(Icons.logout),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const InternalsCalc(),
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.calculate),
+                ),
+                Text("Internal Calc"),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.logout),
+                ),
+                Text("Log Out"),
+              ],
             ),
           ],
         ),
