@@ -2,7 +2,7 @@
 
 ## GoTo:
 
-<img src="assets/AssignMate.png" align=right height=200>
+<img src="assign_mate_app/assets/AssignMate.png" align=right height=200>
 
 - [Downloading](#download-attendease)
   - [Requirements](#requirements)
@@ -15,7 +15,7 @@
 - [Supporting](#supporting)
 
 ## Download AttendEase
-Download AttendEase from the [Releases](https://github.com/trulyPranav/AttendEase/releases/latest). Or if you're lazy, get the apk [here!](https://github.com/trulyPranav/AttendEase/releases/download/Application-Final/attendease.apk)
+Get the apk [here!](https://github.com/ABHIRAM-AP/AssignMate/releases/tag/v0.0.1)
 
 ### Requirements
 - Android 11 and above
@@ -27,6 +27,9 @@ It also provides an internal calculator to calculate internals of a particular s
 Students can login directly with their email and password, and veiw the data.
 Once logged in, the students are not required to re-login, and just reopen the app again to view their data!
 
+## Features
+ - Students can quickly access their assignment details even if they miss a class.
+ - 
 
 ## Backend and Database
 The Whole Backend is Done using Firebase. FireStore is used as Database for storing Assignment Details, Class Rep Details and Student Details.
