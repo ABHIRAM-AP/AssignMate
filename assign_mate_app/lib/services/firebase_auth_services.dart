@@ -29,7 +29,6 @@ class FirebaseAuthService {
             .doc(userCredential.user!.uid)
             .set({
           "email": email,
-          "password": password,
           "repId": repId ?? "N/A",
           "role": role,
         }, SetOptions(merge: true));
