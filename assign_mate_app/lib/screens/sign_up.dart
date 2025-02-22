@@ -44,7 +44,7 @@ class _SignUpPageState extends State<SignUpPage> {
         email: emailidController.text.trim(),
         password: passwordController.text.trim(),
         role: _role!,
-        repId: _role == "rep" ? repidController.text.trim() : null,
+        repId: _role == "rep" ? repidController.text.trim() : "101",
       );
 
       if (context.mounted) {
