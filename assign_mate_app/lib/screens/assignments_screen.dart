@@ -1,4 +1,3 @@
-import 'package:assign_mate_app/widgets/photo_button.dart';
 import 'package:assign_mate_app/widgets/search_bar.dart';
 import 'package:assign_mate_app/widgets/util_tab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -213,6 +212,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                 ),
               ),
             ),
+            // SearchBarAssignments(),
             StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('Assignment_Subjects')

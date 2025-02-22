@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:assign_mate_app/screens/assignments_screen.dart';
 import 'package:assign_mate_app/screens/login_screen_normal.dart';
 import 'package:assign_mate_app/screens/splash_screen.dart';
-import 'package:assign_mate_app/theme/app_theme.dart'; // Import the theme
+import 'package:assign_mate_app/theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme, // Apply the custom theme
+      theme: AppTheme.lightTheme,
       home: const SplashScreen(),
     );
   }

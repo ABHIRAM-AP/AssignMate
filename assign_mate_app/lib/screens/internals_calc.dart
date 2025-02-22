@@ -35,36 +35,37 @@ class _InternalsCalcState extends State<InternalsCalc> {
         series2Marks == null ||
         assignmentMark == null ||
         attendanceMark == null) {
-      showResultDialog("Scammmmm", "Enter marks to calculate the internals");
+      showResultDialog("Scam", "Enter marks to calculate the internals");
       return;
-    }
-
-    if (attendanceMark > 100 || attendanceMark < 0) {
-      print("Enter a valid Attendance");
-    } else if (attendanceMark >= 90) {
-      attendanceMark = 10;
-    } else if (attendanceMark < 90 || attendanceMark >= 80) {
-      attendanceMark = 9;
-    } else {
-      attendanceMark = 8.5;
-    }
-
-    if (assignmentMark > 15 || assignmentMark < 0) {
-      print("Enter a valid Assignment Mark");
-    }
-
-    if (series1Marks > 50 ||
+    } else if (assignmentMark > 15 || assignmentMark < 0) {
+      showResultDialog("Assignment Marks", "Enter a valid Assignment mark");
+      return;
+    } else if (series1Marks > 50 ||
         series2Marks > 50 ||
         series1Marks < 0 ||
         series2Marks < 0) {
-      print("Enter a Valid Series Marks");
-    }
-    double seriesAvg = (series1Marks / 50) * 12.5 + (series2Marks / 50) * 12.5;
+      showResultDialog("Series Marks", "Enter a valid Series mark");
+      return;
+    } else if (attendanceMark > 100 || attendanceMark < 0) {
+      showResultDialog("Attendance", "Enter a valid Attendance");
+      return;
+    } else {
+      if (attendanceMark >= 90 || attendanceMark <= 100) {
+        attendanceMark = 10;
+      } else if (attendanceMark < 90 || attendanceMark >= 80) {
+        attendanceMark = 9;
+      } else {
+        attendanceMark = 8.5;
+      }
 
-    double totalMarks = seriesAvg + attendanceMark + assignmentMark;
-    showResultDialog(
-        "Internal Marks", "Your total internal marks: $totalMarks");
-    resetFields();
+      double seriesAvg =
+          (series1Marks / 50) * 12.5 + (series2Marks / 50) * 12.5;
+
+      double totalMarks = seriesAvg + attendanceMark + assignmentMark;
+      showResultDialog(
+          "Internal Marks", "Your total internal marks: $totalMarks");
+      resetFields();
+    }
   }
 
   void showResultDialog(String title, String message) {
@@ -75,7 +76,7 @@ class _InternalsCalcState extends State<InternalsCalc> {
         content: Text(message),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context), // Close the pop-up
+            onPressed: () => Navigator.pop(context),
             child: Text("OK"),
           ),
         ],
@@ -88,7 +89,6 @@ class _InternalsCalcState extends State<InternalsCalc> {
     secondSeriesController.clear();
     attendanceController.clear();
     assignmentMarksController.clear();
-
     setState(() {});
   }
 
@@ -98,58 +98,65 @@ class _InternalsCalcState extends State<InternalsCalc> {
       appBar: AppBar(
         title: Text("Internal Calculator"),
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
             children: [
-              TextField(
-                controller: firstSeriesController,
-                decoration:
-                    InputDecoration(hintText: "Enter First Series Marks:"),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextField(
+                        controller: firstSeriesController,
+                        decoration: InputDecoration(
+                            hintText: "Enter First Series Marks:"),
+                      ),
+                      const SizedBox(height: 50),
+                      TextField(
+                        controller: secondSeriesController,
+                        decoration: InputDecoration(
+                            hintText: "Enter Second Series Marks:"),
+                      ),
+                      const SizedBox(height: 50),
+                      TextField(
+                        controller: assignmentMarksController,
+                        decoration: InputDecoration(
+                            hintText: "Enter Assignment Marks:"),
+                      ),
+                      const SizedBox(height: 50),
+                      TextField(
+                        controller: attendanceController,
+                        decoration: InputDecoration(
+                            hintText: "Enter Attendance in Percentage:"),
+                      ),
+                      const SizedBox(height: 50),
+                      ElevatedButton(
+                        onPressed: calculateInternals,
+                        child: Text("Check Values"),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
               ),
-              const SizedBox(
-                height: 50,
-              ),
-              TextField(
-                controller: secondSeriesController,
-                decoration:
-                    InputDecoration(hintText: "Enter Second Series Marks:"),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              TextField(
-                controller: assignmentMarksController,
-                decoration:
-                    InputDecoration(hintText: "Enter Assignment Marks:"),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              TextField(
-                controller: attendanceController,
-                decoration: InputDecoration(
-                    hintText: "Enter Attendance in Percentage:"),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              ElevatedButton(
-                onPressed: () => calculateInternals(),
-                child: Text("Check Values"),
-              ),
-              SizedBox(height: 50),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: UtilTab(), // Home, Internal Calc, Logout Tab
+              const SizedBox(height: 10),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 30.0, vertical: 10),
+                  child: UtilTab(),
+                ),
               ),
             ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }

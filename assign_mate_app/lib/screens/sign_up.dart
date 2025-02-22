@@ -54,7 +54,13 @@ class _SignUpPageState extends State<SignUpPage> {
         );
       }
     } catch (e) {
-      if (context.mounted) print('Failed to create account: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text("Failed to create an account ${e.toString()}")),
+        );
+      }
+      ;
     }
   }
 
@@ -64,6 +70,10 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text("Sign Up"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -86,23 +96,27 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 20),
 
                 // Role Selection (Radio Buttons)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RadioOptionWidget(
-                      text: "Student",
-                      value: "student",
-                      groupValue: _role,
-                      onChanged: (val) => setState(() => _role = val),
-                    ),
-                    const SizedBox(width: 20),
-                    RadioOptionWidget(
-                      text: "Rep",
-                      value: "rep",
-                      groupValue: _role,
-                      onChanged: (val) => setState(() => _role = val),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 10.0, bottom: 5.0, left: 20.0, right: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RadioOptionWidget(
+                        text: "Student",
+                        value: "student",
+                        groupValue: _role,
+                        onChanged: (val) => setState(() => _role = val),
+                      ),
+                      const SizedBox(width: 20),
+                      RadioOptionWidget(
+                        text: "Rep",
+                        value: "rep",
+                        groupValue: _role,
+                        onChanged: (val) => setState(() => _role = val),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 30),
 
@@ -113,7 +127,19 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 15),
                     ),
-                    onPressed: handleSignUp,
+                    onPressed: () {
+                      if (emailidController.text.trim().isNotEmpty &&
+                          passwordController.text.trim().isNotEmpty) {
+                        if (_role == "rep" &&
+                            repidController.text.trim().isNotEmpty) {
+                          handleSignUp();
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Enter the credentials")),
+                        );
+                      }
+                    },
                     child: Text(
                       "Sign Up",
                       style: GoogleFonts.poppins(
