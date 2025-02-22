@@ -77,7 +77,7 @@ class _InternalsCalcState extends State<InternalsCalc> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("OK"),
+            child: const Text("OK"),
           ),
         ],
       ),
@@ -92,11 +92,28 @@ class _InternalsCalcState extends State<InternalsCalc> {
     setState(() {});
   }
 
+  InputDecoration customInputDecoration(String hintText) {
+    return InputDecoration(
+      hintText: hintText,
+      filled: true,
+      fillColor: Colors.grey[200], // Soft background
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none, // Remove default border
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.blue, width: 2),
+      ),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Internal Calculator"),
+        title: const Text("Internal Calculator"),
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
@@ -113,33 +130,51 @@ class _InternalsCalcState extends State<InternalsCalc> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      const SizedBox(height: 50),
                       TextField(
+                        keyboardType: TextInputType.numberWithOptions(),
                         controller: firstSeriesController,
-                        decoration: InputDecoration(
-                            hintText: "Enter First Series Marks:"),
+                        decoration:
+                            customInputDecoration("Enter First Series Marks:"),
                       ),
                       const SizedBox(height: 50),
                       TextField(
+                        keyboardType: TextInputType.numberWithOptions(),
                         controller: secondSeriesController,
-                        decoration: InputDecoration(
-                            hintText: "Enter Second Series Marks:"),
+                        decoration:
+                            customInputDecoration("Enter Second Series Marks:"),
                       ),
                       const SizedBox(height: 50),
                       TextField(
+                        keyboardType: TextInputType.numberWithOptions(),
                         controller: assignmentMarksController,
-                        decoration: InputDecoration(
-                            hintText: "Enter Assignment Marks:"),
+                        decoration:
+                            customInputDecoration("Enter Assignment Marks:"),
                       ),
                       const SizedBox(height: 50),
                       TextField(
+                        keyboardType: TextInputType.numberWithOptions(),
                         controller: attendanceController,
-                        decoration: InputDecoration(
-                            hintText: "Enter Attendance in Percentage:"),
+                        decoration: customInputDecoration(
+                            "Enter Attendance in Percentage:"),
                       ),
                       const SizedBox(height: 50),
                       ElevatedButton(
                         onPressed: calculateInternals,
-                        child: Text("Check Values"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF212121),
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          "Submit",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
                       ),
                       const SizedBox(height: 20),
                     ],
