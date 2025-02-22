@@ -130,8 +130,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     onPressed: () {
                       if (emailidController.text.trim().isNotEmpty &&
                           passwordController.text.trim().isNotEmpty) {
-                        if (_role == "rep" &&
-                            repidController.text.trim().isNotEmpty) {
+                        if (_role == "rep") {
+                          if (repidController.text.trim().isNotEmpty) {
+                            handleSignUp();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Enter Rep ID")),
+                            );
+                          }
+                        } else {
+                          // If role is student, proceed with signup
                           handleSignUp();
                         }
                       } else {
