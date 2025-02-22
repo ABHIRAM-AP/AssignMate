@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailidController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FirebaseAuthService _authService = FirebaseAuthService();
+  bool _isLoading = false; // Track loading state
 
   @override
   void dispose() {
@@ -27,15 +28,27 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void showSnackBar(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.redAccent,
+      ),
+    );
   }
 
   Future<void> loginUser() async {
-    try {
-      String email = emailidController.text.trim();
-      String password = passwordController.text.trim();
+    String email = emailidController.text.trim();
+    String password = passwordController.text.trim();
 
+    if (email.isEmpty || password.isEmpty) {
+      showSnackBar("Email and password cannot be empty.");
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
@@ -44,27 +57,25 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
-      String? role = await _authService.getUserRole(userCredential!.user!.uid);
+      String? role = await _authService.getUserRole(userCredential.user!.uid);
 
-      if (role == 'rep') {
+      if (role == 'rep' || role == 'student') {
+        bool isRep = role == 'rep';
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => AssignmentsScreen(isRep: true)),
-        );
-      } else if (role == 'student') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AssignmentsScreen(isRep: false)),
+            builder: (context) => AssignmentsScreen(isRep: isRep),
+          ),
         );
       } else {
-        showSnackBar("User document not found in Firestore");
+        showSnackBar("User document not found in Firestore.");
       }
     } on FirebaseAuthException catch (e) {
       showSnackBar(e.message ?? "Login failed. Please try again.");
     } catch (e) {
       showSnackBar("Something went wrong. Please try again.");
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -83,70 +94,64 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Email TextField
-                EmailIdTextfield(emailidController: emailidController),
-                const SizedBox(height: 20),
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Email TextField
+              EmailIdTextfield(emailidController: emailidController),
+              const SizedBox(height: 20),
 
-                // Password TextField
-                PasswordTextfield(passwordController: passwordController),
-                const SizedBox(height: 30),
+              // Password TextField
+              PasswordTextfield(passwordController: passwordController),
+              const SizedBox(height: 30),
 
-                // Login Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                    ),
-                    onPressed: () async {
-                      await loginUser();
-                    },
-                    child: Text(
-                      "Login",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
+              // Login Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    backgroundColor: Color(0xFF212121),
                   ),
-                ),
-                const SizedBox(height: 20),
-
-                // Sign Up Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignUpPage(),
+                  onPressed: _isLoading ? null : loginUser,
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : Text(
+                          "Login",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
-                      );
-                    },
-                    child: Text(
-                      "Sign Up",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Sign Up Button
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SignUpPage(),
                       ),
+                    );
+                  },
+                  child: Text(
+                    "Don't have an account? Sign Up",
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Color(0xFF212121),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
