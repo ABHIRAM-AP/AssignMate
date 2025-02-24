@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:assign_mate_app/screens/assignments_screen.dart';
 import 'package:assign_mate_app/screens/sign_up.dart';
 import 'package:assign_mate_app/services/firebase_auth_services.dart';
@@ -88,72 +89,100 @@ class _LoginScreenState extends State<LoginScreen> {
         titleTextStyle: GoogleFonts.poppins(
           fontSize: 25,
           fontWeight: FontWeight.bold,
-          color: Colors.black,
         ),
         centerTitle: true,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Email TextField
-              EmailIdTextfield(emailidController: emailidController),
-              const SizedBox(height: 20),
-
-              // Password TextField
-              PasswordTextfield(passwordController: passwordController),
-              const SizedBox(height: 30),
-
-              // Login Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    backgroundColor: Color(0xFF212121),
-                  ),
-                  onPressed: _isLoading ? null : loginUser,
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                          "Login",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
               ),
-              const SizedBox(height: 20),
-
-              // Sign Up Button
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignUpPage(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    "Don't have an account? Sign Up",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Color(0xFF212121),
+              child: IntrinsicHeight(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    AnimatedTextKit(
+                      repeatForever: true,
+                      animatedTexts: [
+                        ColorizeAnimatedText('AssignMate',
+                            textStyle: GoogleFonts.poppins(
+                              fontSize: 49.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            colors: [
+                              Color(0xFF1E3A8A),
+                              Color(0xFFF72585),
+                              Color(0xFFFFC107),
+                              Color(0xFF34D399),
+                            ]),
+                      ],
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0)
+                          .copyWith(bottom: 20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          EmailIdTextfield(
+                              emailidController: emailidController),
+                          const SizedBox(height: 20),
+                          PasswordTextfield(
+                              passwordController: passwordController),
+                          const SizedBox(height: 30),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                backgroundColor: Color(0xFF212121),
+                              ),
+                              onPressed: _isLoading ? null : loginUser,
+                              child: _isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white)
+                                  : Text(
+                                      "Login",
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SignUpPage(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Don't have an account? Sign Up",
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

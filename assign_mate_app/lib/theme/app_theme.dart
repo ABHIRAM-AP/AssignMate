@@ -4,15 +4,15 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   static ThemeData lightTheme = ThemeData(
     appBarTheme: AppBarTheme(
-      backgroundColor: const Color(0xFFCE98F2),
+      backgroundColor: const Color(0xFF004D40),
       centerTitle: true,
       titleTextStyle: GoogleFonts.poppins(
         fontSize: 25,
         fontWeight: FontWeight.bold,
-        color: Colors.black,
+        color: Colors.white,
       ),
     ),
-    scaffoldBackgroundColor: const Color(0xFFCE98F2),
+    scaffoldBackgroundColor: const Color(0xFF004D40),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.black,

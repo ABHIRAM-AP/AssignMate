@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:assign_mate_app/widgets/search_bar.dart';
 import 'package:assign_mate_app/widgets/util_tab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -71,9 +72,14 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: const Color(0xFF8B0000),
           title: Text(
             "Enter Assignment Details",
-            style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+            style: GoogleFonts.orbitron(
+              fontSize: 23,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFFFFD54F),
+            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -201,14 +207,35 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 38),
               child: Align(
                 alignment: Alignment.topLeft,
-                child: Text(
-                  "Welcome\n${userName ?? 'Loading...'}",
-                  style: GoogleFonts.roboto(
-                    fontSize:
-                        (userName != null && userName!.length >= 7) ? 35 : 39,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+                // child: Text(
+                //   "Welcome\n${userName ?? 'Loading...'}",
+                //   style: GoogleFonts.roboto(
+                //     fontSize:
+                //         (userName != null && userName!.length >= 7) ? 35 : 39,
+                //     fontWeight: FontWeight.bold,
+                //     color: Colors.white,
+                //   ),
+                //   overflow: TextOverflow.ellipsis,
+                // ),
+                child: AnimatedTextKit(
+                  repeatForever: true,
+                  animatedTexts: [
+                    ColorizeAnimatedText(
+                      "Welcome\n${userName ?? 'Loading...'}",
+                      textStyle: GoogleFonts.orbitron(
+                        fontSize: (userName != null && userName!.length >= 7)
+                            ? 35
+                            : 39,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      colors: [
+                        Color(0xFFB71C1C), // Iron Man Red
+                        Color(0xFFFFD600), // Gold
+                        Color(0xFF263238), // Dark Charcoal
+                        Color(0xFF00E5FF), // Arc Reactor Blue
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -234,13 +261,25 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 30, vertical: 6.0),
                         child: Card(
-                          color: const Color(0xFFEADDFF),
+                          color: const Color(0xFFFFF3E0),
                           elevation: 8,
                           child: ListTile(
                             contentPadding: EdgeInsets.all(15),
-                            title: Text(data['Title']),
-                            subtitle: Text(DateFormat('d, EEEE, MMMM')
-                                .format((data['Date'] as Timestamp).toDate())),
+                            title: Text(
+                              data['Title'],
+                              style: GoogleFonts.montserrat(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: Text(
+                              DateFormat('d, EEEE, MMMM').format(
+                                (data['Date'] as Timestamp).toDate(),
+                              ),
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                             trailing: widget.isRep
                                 ? IconButton(
                                     icon: const Icon(Icons.delete,

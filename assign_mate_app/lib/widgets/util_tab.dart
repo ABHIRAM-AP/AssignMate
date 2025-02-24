@@ -40,6 +40,7 @@ class _UtilTabState extends State<UtilTab> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: const Color(0xFF2F2F2F),
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -58,17 +59,23 @@ class _UtilTabState extends State<UtilTab> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => AssignmentsScreen(
-                          isRep: userRole == "rep", // Pass role dynamically
+                          isRep: userRole == "rep",
                         ),
                       ),
                     );
                   },
-                  child: Icon(Icons.home),
+                  child: Icon(
+                    Icons.home,
+                    color: Color(0xFFFFD54F),
+                  ),
                 ),
-                SizedBox(
-                  height: 0,
+                SizedBox(height: 4),
+                Text(
+                  "Home",
+                  style: TextStyle(
+                    color: Color(0xFFFFD54F),
+                  ),
                 ),
-                Text("Home"),
               ],
             ),
             Column(
@@ -83,9 +90,10 @@ class _UtilTabState extends State<UtilTab> {
                       ),
                     );
                   },
-                  child: Icon(Icons.calculate),
+                  child: Icon(Icons.calculate, color: Color(0xFFFFD54F)),
                 ),
-                Text("Internal Calc"),
+                Text("Internal Calc",
+                    style: TextStyle(color: Color(0xFFFFD54F))),
               ],
             ),
             Column(
@@ -101,9 +109,9 @@ class _UtilTabState extends State<UtilTab> {
                       ),
                     );
                   },
-                  child: Icon(Icons.logout),
+                  child: Icon(Icons.logout, color: Color(0xFFB71C1C)),
                 ),
-                Text("Log Out"),
+                Text("Log Out", style: TextStyle(color: Color(0xFFB71C1C))),
               ],
             ),
           ],
