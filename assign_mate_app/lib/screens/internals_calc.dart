@@ -1,8 +1,13 @@
+import 'package:assign_mate_app/screens/assignments_screen.dart';
 import 'package:assign_mate_app/widgets/util_tab.dart';
 import 'package:flutter/material.dart';
 
 class InternalsCalc extends StatefulWidget {
-  const InternalsCalc({super.key});
+  final bool isRep;
+  const InternalsCalc({
+    super.key,
+    required this.isRep,
+  });
 
   @override
   State<InternalsCalc> createState() => _InternalsCalcState();
@@ -117,7 +122,13 @@ class _InternalsCalcState extends State<InternalsCalc> {
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context, widget.isRep);
+            } else {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }
+          },
         ),
       ),
       body: LayoutBuilder(
@@ -181,17 +192,15 @@ class _InternalsCalcState extends State<InternalsCalc> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0, vertical: 10),
-                  child: UtilTab(),
-                ),
-              ),
             ],
           );
         },
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: UtilTab(isRep: widget.isRep),
+        ),
       ),
     );
   }

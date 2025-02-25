@@ -71,7 +71,7 @@ class RadioOptionWidget extends StatelessWidget {
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.bold,
               fontSize: 16,
-              color: Colors.black,
+              color: Colors.white,
               letterSpacing: 1.2,
             ),
           ),

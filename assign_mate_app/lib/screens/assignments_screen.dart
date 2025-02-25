@@ -196,6 +196,34 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
     );
   }
 
+  Widget _buildAssignmentData(Map<String, dynamic> data) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 6.0),
+      child: Card(
+        color: const Color(0xFFFFF3E0),
+        elevation: 8,
+        child: ListTile(
+          contentPadding: EdgeInsets.all(15),
+          title: Text(
+            data['Title'],
+            style: GoogleFonts.montserrat(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          subtitle: Text(
+            "Due Date: ${DateFormat('d-EE-MMM').format(
+              (data['Date'] as Timestamp).toDate(),
+            )}",
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,16 +235,6 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 38),
               child: Align(
                 alignment: Alignment.topLeft,
-                // child: Text(
-                //   "Welcome\n${userName ?? 'Loading...'}",
-                //   style: GoogleFonts.roboto(
-                //     fontSize:
-                //         (userName != null && userName!.length >= 7) ? 35 : 39,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.white,
-                //   ),
-                //   overflow: TextOverflow.ellipsis,
-                // ),
                 child: AnimatedTextKit(
                   repeatForever: true,
                   animatedTexts: [
@@ -239,100 +257,86 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                 ),
               ),
             ),
-            // SearchBarAssignments(),
-            StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('Assignment_Subjects')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text("No Assignments Available"));
-                }
-                return Expanded(
-                  child: ListView.builder(
+            Expanded(
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('Assignment_Subjects')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Center(
+                      child: Text(
+                        "No Assignments Available",
+                        style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var doc = snapshot.data!.docs[index];
                       var data = doc.data();
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 6.0),
-                        child: Card(
-                          color: const Color(0xFFFFF3E0),
-                          elevation: 8,
-                          child: ListTile(
-                            contentPadding: EdgeInsets.all(15),
-                            title: Text(
-                              data['Title'],
-                              style: GoogleFonts.montserrat(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            subtitle: Text(
-                              DateFormat('d, EEEE, MMMM').format(
-                                (data['Date'] as Timestamp).toDate(),
-                              ),
-                              style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            trailing: widget.isRep
-                                ? IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        color: Colors.red),
-                                    onPressed: () async {
-                                      await FirebaseFirestore.instance
-                                          .collection('Assignment_Subjects')
-                                          .doc(doc.id)
-                                          .delete();
-                                    },
-                                  )
-                                : const Icon(Icons.arrow_forward),
-                          ),
-                        ),
-                      );
+                      return widget.isRep
+                          ? Dismissible(
+                              onDismissed: (direction) async {
+                                await FirebaseFirestore.instance
+                                    .collection('Assignment_Subjects')
+                                    .doc(doc.id)
+                                    .delete();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "Assignment Deleted",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    backgroundColor: Colors.redAccent,
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              },
+                              key: Key(doc.id),
+                              child: _buildAssignmentData(data))
+                          : _buildAssignmentData(data);
                     },
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-            if (widget.isRep) ...[
+            if (widget.isRep)
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 30, top: 10),
-                  child: IconButton(
-                    style: ButtonStyle(
-                      shape: WidgetStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                        ),
-                      ),
-                      iconColor: WidgetStatePropertyAll(Colors.black),
-                      backgroundColor: WidgetStatePropertyAll(Colors.white),
-                    ),
+                  padding: const EdgeInsets.only(right: 30, bottom: 20),
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.white,
                     onPressed: () {
-                      setState(
-                        () {
-                          _addassignment();
-                        },
-                      );
+                      _addassignment();
                     },
-                    icon: Icon(Icons.add, size: 30),
+                    child: Icon(Icons.add, size: 30, color: Colors.black),
                   ),
                 ),
               ),
-            ],
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10),
-              child: UtilTab(), // Home, Internal, Logout Tab
-            ),
           ],
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: UtilTab(isRep: widget.isRep),
         ),
       ),
     );
