@@ -14,7 +14,7 @@
 - [Contributing](#contributing)
 - [Supporting](#supporting)
 
-## Download AttendEase
+## Download AssignMate
 Get the apk [here!](https://github.com/ABHIRAM-AP/AssignMate/releases/tag/v0.0.1)
 
 ### Requirements
