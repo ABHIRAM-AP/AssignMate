@@ -92,97 +92,64 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         centerTitle: true,
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
-              child: IntrinsicHeight(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    AnimatedTextKit(
-                      repeatForever: true,
-                      animatedTexts: [
-                        ColorizeAnimatedText('AssignMate',
-                            textStyle: GoogleFonts.poppins(
-                              fontSize: 49.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            colors: [
-                              Color(0xFF1E3A8A),
-                              Color(0xFFF72585),
-                              Color(0xFFFFC107),
-                              Color(0xFF34D399),
-                            ]),
-                      ],
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0)
+                .copyWith(bottom: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                EmailIdTextfield(emailidController: emailidController),
+                const SizedBox(height: 20),
+                PasswordTextfield(passwordController: passwordController),
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      backgroundColor: Color(0xFF212121),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0)
-                          .copyWith(bottom: 20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          EmailIdTextfield(
-                              emailidController: emailidController),
-                          const SizedBox(height: 20),
-                          PasswordTextfield(
-                              passwordController: passwordController),
-                          const SizedBox(height: 30),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                                backgroundColor: Color(0xFF212121),
-                              ),
-                              onPressed: _isLoading ? null : loginUser,
-                              child: _isLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white)
-                                  : Text(
-                                      "Login",
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                    onPressed: _isLoading ? null : loginUser,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            "Login",
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.white,
                             ),
                           ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const SignUpPage(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "Don't have an account? Sign Up",
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpPage(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Don't have an account? Sign Up",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Color.fromARGB(255, 255, 255, 255),
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

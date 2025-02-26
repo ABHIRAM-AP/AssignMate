@@ -74,7 +74,7 @@ class _UtilTabState extends State<UtilTab> {
             ),
             _buildUtilItem(
               icon: Icons.calculate,
-              label: "Internal Calc",
+              label: "Internals",
               color: const Color(0xFFFFD54F),
               onTap: () {
                 print("Navigating to InternalsCalc. isRep: ${widget.isRep}");

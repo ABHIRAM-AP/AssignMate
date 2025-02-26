@@ -88,14 +88,14 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                 padding: const EdgeInsets.only(bottom: 14.0),
                 child: TextField(
                   controller: assignmentController,
-                  decoration: InputDecoration(labelText: "Enter Assignment"),
+                  decoration: InputDecoration(hintText: "Enter Assignment"),
                 ),
               ),
               TextField(
                 controller: dateController,
                 readOnly: true, // Prevents manual input
                 decoration: InputDecoration(
-                  labelText: "Pick Due Date",
+                  hintText: "Pick Due Date",
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
                 onTap: () async {
@@ -164,8 +164,8 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                   },
                   child: Text(
                     "Submit",
-                    style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.bold, color: Colors.black),
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
                 ElevatedButton(
@@ -173,7 +173,8 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                     padding: WidgetStatePropertyAll(
                       EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 15),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(Colors.amber),
+                    backgroundColor:
+                        WidgetStatePropertyAll(const Color(0xFFFF7043)),
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)),
@@ -184,8 +185,8 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                   },
                   child: Text(
                     "Cancel",
-                    style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.bold, color: Colors.black),
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
               ],

@@ -31,7 +31,7 @@ class RadioOptionWidget extends StatelessWidget {
               return Transform.scale(
                 scale: scale,
                 child: Transform.rotate(
-                  angle: 0.0, // 45 degrees for diamond shape
+                  angle: 0.0,
                   child: Container(
                     width: 25,
                     height: 25,
@@ -39,11 +39,11 @@ class RadioOptionWidget extends StatelessWidget {
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(4),
                       border:
-                          Border.all(color: const Color(0xFF5A4FCF), width: 2),
+                          Border.all(color: const Color(0xFFFFD54F), width: 2),
                       boxShadow: isSelected
                           ? [
                               BoxShadow(
-                                  color: const Color(0xFF5A4FCF), blurRadius: 8)
+                                  color: const Color(0xFFFFD54F), blurRadius: 8)
                             ]
                           : [],
                     ),
@@ -55,7 +55,7 @@ class RadioOptionWidget extends StatelessWidget {
                               decoration: BoxDecoration(
                                 shape: BoxShape.rectangle,
                                 borderRadius: BorderRadius.circular(2),
-                                color: const Color(0xFF5A4FCF),
+                                color: const Color(0xFFFFD54F),
                               ),
                             ),
                           )
