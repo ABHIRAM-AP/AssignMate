@@ -47,5 +47,4 @@ app.*.map.json
 # Others
 android/app/google-services.json
 firebase.json
-lib/services/firebase_options.dart
 lib/screens/splash_screen.dart
