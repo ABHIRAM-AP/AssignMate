@@ -9,7 +9,6 @@
 - [About](#about)
 - [Features](#features)
 - [Screens](#screens)
-  - [Feature Screens](#feature-screens)
 - [Bugs and Issues](#bugs-and-issues)
 - [Contributing](#contributing)
 - [Supporting](#supporting)
@@ -30,7 +29,8 @@ Once logged in, the students are not required to re-login, and just reopen the a
 ## Features
  - Students can quickly access their assignment details even if they miss a class.
   
-
+## Screens
+<img src="readmeAssets/Login_Page.jpg" height=400>    <img src="readmeAssets/Rep_SignUp.jpg" height=400>    <img src="readmeAssets/SignUp_Page.jpg" height=400>    <img src="readmeAssets/Assignments_Screen" height=400>    <img src="readmeAssets/Add_Assignment_PopUp.jpg" height=400>       <img src="readmeAssets/Internals_Page.jpg" height=400> <img src="readmeAssets/Internals_PopUp.jpg" height=400>
 ## Backend and Database
   -The entire backend of AssignMate is built using Firebase.
   -FireStore is used as Database for storing Assignment Details, Class Rep Details and Student Details.
