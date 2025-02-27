@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -67,5 +68,19 @@ class FirebaseAuthService {
       return "student";
     }
     return null;
+  }
+
+  Future<bool> checkIfRepExists() async {
+    try {
+      var querySnapshot = await _firestore
+          .collection("Class_Rep")
+          .where("role", isEqualTo: "rep")
+          .get();
+
+      return querySnapshot.docs.isNotEmpty;
+    } on FirebaseAuthException catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
   }
 }

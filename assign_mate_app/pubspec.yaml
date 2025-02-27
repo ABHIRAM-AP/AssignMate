@@ -40,8 +40,7 @@ dependencies:
   firebase_auth: ^5.4.1
   cloud_firestore: ^5.6.2
   flutter_launcher_icons: ^0.14.3
-  lottie: ^3.3.1
-  animated_text_kit: ^4.2.3
+  
 
 dev_dependencies:
   flutter_test:
@@ -72,7 +71,7 @@ flutter_launcher_icons:
     android: true
     ios: true
     image_path: "assign_mate_app/assets/AssignMate.png"
-    adaptive_icon_background: "#ffffff" # Change background color if needed
+    adaptive_icon_background: "#ffffff" 
     adaptive_icon_foreground: "assets/app_icon.png"
 
   # An image asset can refer to one or more resolution-specific "variants", see

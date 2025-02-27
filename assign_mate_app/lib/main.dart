@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:assign_mate_app/screens/assignments_screen.dart';
 import 'package:assign_mate_app/screens/login_screen_normal.dart';
-import 'package:assign_mate_app/screens/splash_screen.dart';
 import 'package:assign_mate_app/theme/app_theme.dart';
 
 void main() {
@@ -19,19 +18,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const SplashScreen(),
+      home: const HomeScreen(),
     );
   }
 }
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
@@ -45,17 +44,19 @@ class _SplashScreenState extends State<SplashScreen> {
     // Check authentication state after Firebase initializes
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      debugPrint("User logged in: ${user.email}");
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => const AssignmentsScreen(isRep: false)),
+          builder: (context) => const AssignmentsScreen(isRep: false),
+        ),
       );
     } else {
       debugPrint("User not logged in");
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
       );
     }
   }
@@ -63,7 +64,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }

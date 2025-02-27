@@ -1,6 +1,6 @@
-import 'package:assign_mate_app/screens/assignments_screen.dart';
 import 'package:assign_mate_app/widgets/util_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class InternalsCalc extends StatefulWidget {
   final bool isRep;
@@ -40,7 +40,7 @@ class _InternalsCalcState extends State<InternalsCalc> {
         series2Marks == null ||
         assignmentMark == null ||
         attendanceMark == null) {
-      showResultDialog("Scam", "Enter marks to calculate the internals");
+      showResultDialog("", "Enter marks to calculate the internals");
       return;
     } else if (assignmentMark > 15 || assignmentMark < 0) {
       showResultDialog("Assignment Marks", "Enter a valid Assignment mark");
@@ -73,16 +73,32 @@ class _InternalsCalcState extends State<InternalsCalc> {
     }
   }
 
-  void showResultDialog(String title, String message) {
+  void showResultDialog(String? title, String message) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
+        backgroundColor: const Color(0xFFCCD5AE),
+        title: title != null && title.isNotEmpty
+            ? Text(
+                title,
+                style: GoogleFonts.itim(
+                    fontSize: 24, color: const Color(0xFFBC6C25)),
+              )
+            : null,
+        content: Text(
+          message,
+          style: GoogleFonts.inconsolata(
+              fontSize: 17, fontWeight: FontWeight.w500),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("OK"),
+            child: const Text(
+              "OK",
+              style: TextStyle(
+                color: Color(0xFFBC6C25),
+              ),
+            ),
           ),
         ],
       ),
@@ -101,14 +117,14 @@ class _InternalsCalcState extends State<InternalsCalc> {
     return InputDecoration(
       hintText: hintText,
       filled: true,
-      fillColor: Colors.grey[200], // Soft background
+      fillColor: const Color(0xFFCCD5AE),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none, // Remove default border
+        borderSide: BorderSide.none,
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.blue, width: 2),
+        borderSide: BorderSide(color: const Color(0xFFBC6C25), width: 2),
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     );
@@ -118,10 +134,20 @@ class _InternalsCalcState extends State<InternalsCalc> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Internal Calculator"),
+        title: Text(
+          "Internal Calculator",
+          style: GoogleFonts.itim(
+            color: const Color(0xFFBC6C25),
+            fontWeight: FontWeight.w800,
+            fontSize: 28,
+          ),
+        ),
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: const Color(0xFFBC6C25),
+          ),
           onPressed: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context, widget.isRep);
@@ -173,7 +199,6 @@ class _InternalsCalcState extends State<InternalsCalc> {
                       ElevatedButton(
                         onPressed: calculateInternals,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF212121),
                           padding: EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),

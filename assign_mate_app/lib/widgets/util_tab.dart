@@ -25,18 +25,24 @@ class _UtilTabState extends State<UtilTab> {
       mainAxisSize: MainAxisSize.min,
       children: [
         InkWell(
+          onTap: onTap,
           borderRadius: BorderRadius.circular(12),
-          child: IconButton(
-            icon: Icon(icon),
-            color: color,
-            onPressed: onTap,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: const Color(0xFFBC6C25),
+            ),
+            child: Icon(icon, color: color, size: 30),
           ),
         ),
-        Transform.translate(
-          offset: const Offset(0, -8),
-          child: Text(
-            label,
-            style: GoogleFonts.poppins(color: color, fontSize: 14),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            color: const Color(0xFFBC6C25),
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],
@@ -46,8 +52,8 @@ class _UtilTabState extends State<UtilTab> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFF2F2F2F),
-      elevation: 4,
+      color: Colors.transparent,
+      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -59,10 +65,9 @@ class _UtilTabState extends State<UtilTab> {
             _buildUtilItem(
               icon: Icons.home,
               label: "Home",
-              color: const Color(0xFFFFD54F),
+              color: const Color(0xFFFAEDCD),
               onTap: () {
-                print(
-                    "Navigating to Home. isRep: ${widget.isRep}"); // Debugging log
+                print("Navigating to Home. isRep: ${widget.isRep}");
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -75,9 +80,8 @@ class _UtilTabState extends State<UtilTab> {
             _buildUtilItem(
               icon: Icons.calculate,
               label: "Internals",
-              color: const Color(0xFFFFD54F),
+              color: const Color(0xFFFAEDCD),
               onTap: () {
-                print("Navigating to InternalsCalc. isRep: ${widget.isRep}");
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -89,7 +93,7 @@ class _UtilTabState extends State<UtilTab> {
             _buildUtilItem(
               icon: Icons.logout,
               label: "Log Out",
-              color: const Color(0xFFB71C1C),
+              color: const Color(0xFFFAEDCD),
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement(

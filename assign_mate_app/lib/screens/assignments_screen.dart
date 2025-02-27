@@ -1,5 +1,3 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:assign_mate_app/widgets/search_bar.dart';
 import 'package:assign_mate_app/widgets/util_tab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,13 +70,16 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: const Color(0xFF8B0000),
-          title: Text(
-            "Enter Assignment Details",
-            style: GoogleFonts.orbitron(
-              fontSize: 23,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFFFD54F),
+          backgroundColor: const Color(0xFFCCD5AE),
+          title: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              "Enter Assignment Details",
+              style: GoogleFonts.itim(
+                fontSize: 23,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFFBC6C25),
+              ),
             ),
           ),
           content: Column(
@@ -88,14 +89,18 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                 padding: const EdgeInsets.only(bottom: 14.0),
                 child: TextField(
                   controller: assignmentController,
-                  decoration: InputDecoration(hintText: "Enter Assignment"),
+                  decoration: InputDecoration(
+                    hintText: "Enter Task",
+                    fillColor: const Color(0xFFFAEDCD),
+                  ),
                 ),
               ),
               TextField(
                 controller: dateController,
                 readOnly: true, // Prevents manual input
                 decoration: InputDecoration(
-                  hintText: "Pick Due Date",
+                  fillColor: const Color(0xFFFAEDCD),
+                  hintText: "Pick Date",
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
                 onTap: () async {
@@ -124,12 +129,15 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                 ElevatedButton(
                   style: ButtonStyle(
                     padding: WidgetStatePropertyAll(
-                      EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 15),
+                      EdgeInsets.only(left: 20, right: 30, top: 10, bottom: 15),
                     ),
-                    backgroundColor: WidgetStatePropertyAll(Colors.amber),
+                    backgroundColor: WidgetStatePropertyAll(
+                      const Color(0xFFBC6C25),
+                    ),
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                   ),
                   onPressed: () async {
@@ -163,30 +171,38 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                     }
                   },
                   child: Text(
+                    textAlign: TextAlign.center,
                     "Submit",
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold, color: Colors.white),
+                    style: GoogleFonts.inconsolata(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
                   ),
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
                     padding: WidgetStatePropertyAll(
-                      EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 15),
+                      EdgeInsets.only(left: 20, right: 30, top: 10, bottom: 15),
                     ),
-                    backgroundColor:
-                        WidgetStatePropertyAll(const Color(0xFFFF7043)),
+                    backgroundColor: WidgetStatePropertyAll(
+                      const Color(0xFFBC6C25),
+                    ),
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                   child: Text(
+                    textAlign: TextAlign.center,
                     "Cancel",
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold, color: Colors.white),
+                    style: GoogleFonts.inconsolata(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white),
                   ),
                 ),
               ],
@@ -199,25 +215,28 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
 
   Widget _buildAssignmentData(Map<String, dynamic> data) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 6.0),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 2.0),
       child: Card(
-        color: const Color(0xFFFFF3E0),
+        color: const Color(0xFFCCD5AE),
         elevation: 8,
         child: ListTile(
-          contentPadding: EdgeInsets.all(15),
+          contentPadding: EdgeInsets.all(13),
           title: Text(
             data['Title'],
-            style: GoogleFonts.montserrat(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
+            style: GoogleFonts.itim(
+              fontSize: 24,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF283618),
             ),
           ),
           subtitle: Text(
-            "Due Date: ${DateFormat('d-EE-MMM').format(
+            "  Due Date: ${DateFormat('d-MM-y').format(
               (data['Date'] as Timestamp).toDate(),
             )}",
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
+            style: GoogleFonts.itim(
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFF283618),
             ),
           ),
         ),
@@ -233,30 +252,41 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 38),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 35),
               child: Align(
                 alignment: Alignment.topLeft,
-                child: AnimatedTextKit(
-                  repeatForever: true,
-                  animatedTexts: [
-                    ColorizeAnimatedText(
-                      "Welcome\n${userName ?? 'Loading...'}",
-                      textStyle: GoogleFonts.orbitron(
-                        fontSize: (userName != null && userName!.length >= 7)
-                            ? 35
-                            : 39,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      colors: [
-                        Color(0xFFB71C1C), // Iron Man Red
-                        Color(0xFFFFD600), // Gold
-                        Color(0xFF263238), // Dark Charcoal
-                        Color(0xFF00E5FF), // Arc Reactor Blue
-                      ],
-                    ),
-                  ],
+                child: Text(
+                  "Welcome\n${userName ?? 'Loading...'}",
+                  style: GoogleFonts.itim(
+                    fontSize:
+                        (userName != null && userName!.length >= 7) ? 35 : 39,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFFBC6C25),
+                  ),
                 ),
               ),
+            ),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 30),
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Text(
+                      'Assignments',
+                      style: GoogleFonts.inconsolata(
+                        fontSize: 30,
+                        color: const Color(0xFF606C38),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 1,
+                  width: 337,
+                  color: const Color(0xFFBC6C25),
+                )
+              ],
             ),
             Expanded(
               child: StreamBuilder(
@@ -323,11 +353,15 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 30, bottom: 20),
                   child: FloatingActionButton(
-                    backgroundColor: Colors.white,
+                    backgroundColor: const Color(0xFFBC6C25),
                     onPressed: () {
                       _addassignment();
                     },
-                    child: Icon(Icons.add, size: 30, color: Colors.black),
+                    child: Icon(
+                      Icons.add,
+                      size: 30,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

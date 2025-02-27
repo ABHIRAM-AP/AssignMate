@@ -1,4 +1,3 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:assign_mate_app/screens/login_screen_normal.dart';
 import 'package:assign_mate_app/services/firebase_auth_services.dart';
 import 'package:assign_mate_app/widgets/email_id_textfield.dart';
@@ -41,6 +40,21 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> handleSignUp() async {
     try {
+      if (_role == "rep") {
+        bool repExists = await _authService.checkIfRepExists();
+        if (repExists) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                    "A representative already exists! You cannot sign up as a rep."),
+              ),
+            );
+          }
+          return;
+        }
+      }
+
       await _authService.signUpUser(
         email: emailidController.text.trim(),
         password: passwordController.text.trim(),
@@ -58,7 +72,7 @@ class _SignUpPageState extends State<SignUpPage> {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text("Failed to create an account ${e.toString()}")),
+              content: Text("Failed to create an account: ${e.toString()}")),
         );
       }
     }
@@ -69,9 +83,17 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text("Sign Up"),
+        title: const Text(
+          "Sign Up",
+          style: TextStyle(
+            color: Color(0xFFBC6C25),
+          ),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Color(0xFFBC6C25),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -86,25 +108,13 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    AnimatedTextKit(
-                      repeatForever: true,
-                      animatedTexts: [
-                        ColorizeAnimatedText(
-                          'AssignMate',
-                          textStyle: GoogleFonts.poppins(
-                            fontSize: 49.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          colors: [
-                            Color(0xFFB71C1C), // Iron Man Red
-                            Color(0xFFFFD600), // Gold
-                            Color(0xFF263238), // Dark Charcoal
-                            Color(0xFF00E5FF), // Arc Reactor Blue
-                          ],
-                        ),
-                      ],
+                    Text(
+                      "AssignMate",
+                      style: GoogleFonts.itim(
+                          color: const Color(0xFFBC6C25),
+                          fontSize: 58,
+                          fontWeight: FontWeight.w400),
                     ),
-                    // Second Column - Input Fields and Buttons
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0)
                           .copyWith(bottom: 20),
@@ -153,12 +163,11 @@ class _SignUpPageState extends State<SignUpPage> {
 
                           // Sign Up Button
                           SizedBox(
-                            width: double.infinity,
+                            width: 264,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 15),
-                                backgroundColor: Color(0xFF212121),
                               ),
                               onPressed: () {
                                 if (emailidController.text.trim().isNotEmpty &&
@@ -172,7 +181,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         const SnackBar(
-                                            content: Text("Enter Rep ID")),
+                                          content: Text("Enter Rep ID"),
+                                        ),
                                       );
                                     }
                                   } else {
@@ -181,7 +191,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                        content: Text("Enter the credentials")),
+                                      content: Text("Enter the credentials"),
+                                    ),
                                   );
                                 }
                               },

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   static ThemeData lightTheme = ThemeData(
     appBarTheme: AppBarTheme(
-      backgroundColor: const Color(0xFF004D40),
+      backgroundColor: const Color(0xFFFAEDCD),
       centerTitle: true,
       titleTextStyle: GoogleFonts.poppins(
         fontSize: 25,
@@ -12,10 +12,10 @@ class AppTheme {
         color: Colors.white,
       ),
     ),
-    scaffoldBackgroundColor: const Color(0xFF004D40),
+    scaffoldBackgroundColor: const Color(0xFFFAEDCD),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFFBC6C25),
         padding: const EdgeInsets.symmetric(vertical: 16.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -38,9 +38,10 @@ class AppTheme {
       hintStyle: const TextStyle(color: Colors.black87),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide.none,
       ),
       filled: true,
-      fillColor: const Color(0xFFF5F5F5),
+      fillColor: const Color(0xFFCCD5AE),
       contentPadding: const EdgeInsets.all(20),
     ),
   );

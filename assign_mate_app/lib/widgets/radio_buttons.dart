@@ -24,55 +24,35 @@ class RadioOptionWidget extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TweenAnimationBuilder<double>(
-            duration: const Duration(milliseconds: 200),
-            tween: Tween<double>(begin: 1.0, end: isSelected ? 1.2 : 1.0),
-            builder: (context, scale, child) {
-              return Transform.scale(
-                scale: scale,
-                child: Transform.rotate(
-                  angle: 0.0,
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(4),
-                      border:
-                          Border.all(color: const Color(0xFFFFD54F), width: 2),
-                      boxShadow: isSelected
-                          ? [
-                              BoxShadow(
-                                  color: const Color(0xFFFFD54F), blurRadius: 8)
-                            ]
-                          : [],
+          Container(
+            width: 35,
+            height: 35,
+            decoration: BoxDecoration(
+              color: const Color(0xFFCCD5AE),
+              shape: BoxShape.circle,
+              border: Border.all(color: const Color(0xFFCCD5AE), width: 2),
+            ),
+            child: isSelected
+                ? Center(
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(0xFFD4A373),
+                      ),
                     ),
-                    child: isSelected
-                        ? Center(
-                            child: Container(
-                              width: 12,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.circular(2),
-                                color: const Color(0xFFFFD54F),
-                              ),
-                            ),
-                          )
-                        : null,
-                  ),
-                ),
-              );
-            },
+                  )
+                : null,
           ),
           const SizedBox(width: 10),
           Text(
             text,
             style: GoogleFonts.roboto(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: Colors.white,
-              letterSpacing: 1.2,
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+              color: const Color(0xFF606C38),
+              letterSpacing: 0.7,
             ),
           ),
         ],

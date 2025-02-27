@@ -1,4 +1,3 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:assign_mate_app/screens/assignments_screen.dart';
 import 'package:assign_mate_app/screens/sign_up.dart';
 import 'package:assign_mate_app/services/firebase_auth_services.dart';
@@ -19,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailidController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FirebaseAuthService _authService = FirebaseAuthService();
-  bool _isLoading = false; // Track loading state
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -85,71 +84,99 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Sign In"),
-        titleTextStyle: GoogleFonts.poppins(
-          fontSize: 25,
-          fontWeight: FontWeight.bold,
-        ),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0)
-                .copyWith(bottom: 10),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                EmailIdTextfield(emailidController: emailidController),
-                const SizedBox(height: 20),
-                PasswordTextfield(passwordController: passwordController),
-                const SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      backgroundColor: Color(0xFF212121),
-                    ),
-                    onPressed: _isLoading ? null : loginUser,
-                    child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : Text(
-                            "Login",
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                  ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignUpPage(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "Don't have an account? Sign Up",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Color.fromARGB(255, 255, 255, 255),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+        title: const Text(
+          "Log In",
+          style: TextStyle(
+            color: Color(0xFFBC6C25),
           ),
         ),
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: IntrinsicHeight(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      "AssignMate",
+                      style: GoogleFonts.itim(
+                          color: const Color(0xFFBC6C25),
+                          fontSize: 58,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0)
+                          .copyWith(bottom: 20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          EmailIdTextfield(
+                              emailidController: emailidController),
+                          const SizedBox(height: 20),
+                          PasswordTextfield(
+                              passwordController: passwordController),
+                          const SizedBox(height: 30),
+
+                          // Login Button
+                          SizedBox(
+                            width: 264,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                              ),
+                              onPressed: _isLoading ? null : loginUser,
+                              child: _isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white)
+                                  : Text(
+                                      "Login",
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Navigate to Sign Up
+                          SizedBox(
+                            width: double.infinity,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SignUpPage(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Don't have an account? Sign Up",
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: const Color(0xFF283618),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
