@@ -32,8 +32,8 @@ Once logged in, the students are not required to re-login, and just reopen the a
 ## Screens
 <img src="readmeAssets/Login_Page.jpg" height=400>    <img src="readmeAssets/Rep_SignUp.jpg" height=400>    <img src="readmeAssets/SignUp_Page.jpg" height=400>    <img src="readmeAssets/Assignments_Screen.jpg" height=400>    <img src="readmeAssets/Add_Assignment_PopUp.jpg" height=400>       <img src="readmeAssets/Internals_Page.jpg" height=400> <img src="readmeAssets/Internals_PopUp.jpg" height=400>
 ## Backend and Database
-  -The entire backend of AssignMate is built using Firebase.
-  -FireStore is used as Database for storing Assignment Details, Class Rep Details and Student Details.
+  - The entire backend of AssignMate is built using Firebase.
+  - FireStore is used as Database for storing Assignment Details, Class Rep Details and Student Details.
 
 ## Future Releases
 AssignMate will thrive with future releases for sure. New features planned for implementation include:
