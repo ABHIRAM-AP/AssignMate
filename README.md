@@ -24,15 +24,16 @@ Get the apk [here!](https://github.com/ABHIRAM-AP/AssignMate/releases/tag/v0.0.1
 ## About
 AssignMate is an assignment tracking app that allows students who miss classes to quickly access assignment details.
 It also provides an internal calculator to calculate internals of a particular subject.
-Students can login directly with their email and password, and veiw the data.
+Students can login directly with their email and password, and view the data.
 Once logged in, the students are not required to re-login, and just reopen the app again to view their data!
 
 ## Features
  - Students can quickly access their assignment details even if they miss a class.
- - 
+  
 
 ## Backend and Database
-The Whole Backend is Done using Firebase. FireStore is used as Database for storing Assignment Details, Class Rep Details and Student Details.
+  -The entire backend of AssignMate is built using Firebase.
+  -FireStore is used as Database for storing Assignment Details, Class Rep Details and Student Details.
 
 ## Future Releases
 AssignMate will thrive with future releases for sure. New features planned for implementation include:
@@ -40,14 +41,14 @@ AssignMate will thrive with future releases for sure. New features planned for i
 - Results Viewing and Academic Performance Tracker.
 
 ## Bugs and Issues
-If you encounter a bug, calculation errors, or something, feel free to create an issue. Please include detailed explanation and if you have any ways to solve them, do mention that too!
+If you encounter any issues while using AssignMate, such as bugs or calculation errors, feel free to create an issue.
 
 ## Contributing
-Ofcourse anyone can contribute to this, just do the below:
+Of course anyone can contribute to this, just do the below:
 - Fork the Project
 - Implement what you're planning
 - Create a Pull Request
 I'll surely merge after looking through it!
 
 ## Supporting
-If you like the project/app, do star the repository! It'll do nothing but motivate!
+"If you like AssignMate, please star the repository! Your support keeps the project growing!
