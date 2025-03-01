@@ -34,12 +34,12 @@ class _UtilTabState extends State<UtilTab> {
             child: Icon(icon, color: color, size: 30),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.itim(
             color: const Color(0xFFBC6C25),
-            fontSize: 14,
+            fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
         ),

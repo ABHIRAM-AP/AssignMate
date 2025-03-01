@@ -112,6 +112,7 @@ class _InternalsCalcState extends State<InternalsCalc> {
   InputDecoration customInputDecoration(String hintText) {
     return InputDecoration(
       hintText: hintText,
+      hintStyle: GoogleFonts.itim(fontSize: 17),
       filled: true,
       fillColor: const Color(0xFFCCD5AE),
       border: OutlineInputBorder(
@@ -177,19 +178,19 @@ class _InternalsCalcState extends State<InternalsCalc> {
                       const SizedBox(height: 50),
                       _buildTextFieldforInternals(
                           controller: firstSeriesController,
-                          hintText: "Enter First Series Marks:"),
+                          hintText: "Enter First Series Marks"),
                       const SizedBox(height: 50),
                       _buildTextFieldforInternals(
                           controller: secondSeriesController,
-                          hintText: "Enter Second Series Marks:"),
+                          hintText: "Enter Second Series Marks"),
                       const SizedBox(height: 50),
                       _buildTextFieldforInternals(
                           controller: assignmentMarksController,
-                          hintText: "Enter Assignment Marks (out of 15):"),
+                          hintText: "Enter Assignment Marks (out of 15)"),
                       const SizedBox(height: 50),
                       _buildTextFieldforInternals(
                           controller: attendanceController,
-                          hintText: "Enter Attendance in Percentage:"),
+                          hintText: "Enter Attendance in Percentage"),
                       const SizedBox(height: 50),
 
                       // Submit Button
@@ -203,8 +204,8 @@ class _InternalsCalcState extends State<InternalsCalc> {
                         ),
                         child: Text(
                           "Submit",
-                          style: TextStyle(
-                              fontSize: 18,
+                          style: GoogleFonts.itim(
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                         ),

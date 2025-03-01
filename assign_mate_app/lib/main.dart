@@ -8,7 +8,7 @@ import 'package:assign_mate_app/theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  print(DefaultFirebaseOptions.currentPlatform);
+
   runApp(const MyApp());
 }
 
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => AssignmentsScreen(),
+          builder: (context) => const AssignmentsScreen(),
         ),
       );
     } else {
