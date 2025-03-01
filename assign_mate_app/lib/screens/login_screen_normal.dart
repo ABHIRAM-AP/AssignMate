@@ -6,6 +6,7 @@ import 'package:assign_mate_app/widgets/password_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -61,10 +62,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (role == 'rep' || role == 'student') {
         bool isRep = role == 'rep';
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isRep', isRep);
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => AssignmentsScreen(isRep: isRep),
+            builder: (context) => AssignmentsScreen(),
           ),
         );
       } else {
@@ -86,9 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
         automaticallyImplyLeading: false,
         title: const Text(
           "Log In",
-          style: TextStyle(
-            color: Color(0xFFBC6C25),
-          ),
         ),
       ),
       body: LayoutBuilder(
@@ -105,9 +107,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       "AssignMate",
                       style: GoogleFonts.itim(
-                          color: const Color(0xFFBC6C25),
-                          fontSize: 58,
-                          fontWeight: FontWeight.w400),
+                        color: Color(0xFFBC6C25),
+                        fontSize: 58,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0)
@@ -126,27 +129,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(
                             width: 264,
                             child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                              ),
                               onPressed: _isLoading ? null : loginUser,
                               child: _isLoading
                                   ? const CircularProgressIndicator(
                                       color: Colors.white)
                                   : Text(
                                       "Login",
-                                      style: GoogleFonts.poppins(
+                                      style: GoogleFonts.itim(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                                        fontSize: 22,
                                         color: Colors.white,
                                       ),
                                     ),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 15),
 
-                          // Navigate to Sign Up
+                          // Navigation to Sign Up Page
                           SizedBox(
                             width: double.infinity,
                             child: TextButton(
@@ -160,9 +159,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                               child: Text(
                                 "Don't have an account? Sign Up",
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.itim(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: 19,
                                   color: const Color(0xFF283618),
                                 ),
                               ),

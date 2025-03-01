@@ -6,9 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UtilTab extends StatefulWidget {
-  final bool isRep;
-
-  const UtilTab({super.key, required this.isRep});
+  const UtilTab({super.key});
 
   @override
   State<UtilTab> createState() => _UtilTabState();
@@ -29,9 +27,9 @@ class _UtilTabState extends State<UtilTab> {
           borderRadius: BorderRadius.circular(12),
           child: Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color(0xFFBC6C25),
+              color: Color(0xFFBC6C25),
             ),
             child: Icon(icon, color: color, size: 30),
           ),
@@ -67,12 +65,10 @@ class _UtilTabState extends State<UtilTab> {
               label: "Home",
               color: const Color(0xFFFAEDCD),
               onTap: () {
-                print("Navigating to Home. isRep: ${widget.isRep}");
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        AssignmentsScreen(isRep: widget.isRep),
+                    builder: (context) => const AssignmentsScreen(),
                   ),
                 );
               },
@@ -85,7 +81,7 @@ class _UtilTabState extends State<UtilTab> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => InternalsCalc(isRep: widget.isRep),
+                    builder: (context) => const InternalsCalc(),
                   ),
                 );
               },
@@ -96,12 +92,14 @@ class _UtilTabState extends State<UtilTab> {
               color: const Color(0xFFFAEDCD),
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginScreen(),
-                  ),
-                );
+                if (context.mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                  );
+                }
               },
             ),
           ],

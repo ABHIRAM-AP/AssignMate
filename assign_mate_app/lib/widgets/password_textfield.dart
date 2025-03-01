@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PasswordTextfield extends StatefulWidget {
   final TextEditingController passwordController;
@@ -18,6 +19,9 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
       obscureText: _isObscured,
       decoration: InputDecoration(
         hintText: 'Enter Password',
+        hintStyle: GoogleFonts.itim(
+          fontSize: 19,
+        ),
         suffixIcon: IconButton(
           onPressed: () {
             setState(() {

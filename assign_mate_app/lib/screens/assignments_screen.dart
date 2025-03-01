@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:assign_mate_app/models/assignment.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AssignmentsScreen extends StatefulWidget {
-  final bool isRep;
-
-  const AssignmentsScreen({super.key, required this.isRep});
+  const AssignmentsScreen({super.key});
 
   @override
   State<AssignmentsScreen> createState() => _AssignmentsScreenState();
@@ -17,6 +16,8 @@ class AssignmentsScreen extends StatefulWidget {
 
 class _AssignmentsScreenState extends State<AssignmentsScreen> {
   String? userName;
+  bool _isRep = false;
+
   late final TextEditingController assignmentController;
   late final TextEditingController dateController;
   final List<Assignment> assignments = [];
@@ -27,6 +28,8 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
     fetchUserName();
     assignmentController = TextEditingController();
     dateController = TextEditingController();
+
+    _loadUserRole();
   }
 
   Future<void> fetchUserName() async {
@@ -61,7 +64,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
         "repId": user.uid,
       });
     } catch (e) {
-      print("Firestore error: $e");
+      debugPrint(e.toString());
     }
   }
 
@@ -92,6 +95,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                   decoration: InputDecoration(
                     hintText: "Enter Task",
                     fillColor: const Color(0xFFFAEDCD),
+                    filled: true,
                   ),
                 ),
               ),
@@ -244,6 +248,13 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
     );
   }
 
+  Future<void> _loadUserRole() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isRep = prefs.getBool("isRep") ?? false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -301,9 +312,9 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                     return Center(
                       child: Text(
                         "No Assignments Available",
-                        style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 18,
+                        style: GoogleFonts.itim(
+                            color: Color(0xFFBC6C25),
+                            fontSize: 20,
                             fontWeight: FontWeight.w600),
                       ),
                     );
@@ -313,7 +324,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                     itemBuilder: (context, index) {
                       var doc = snapshot.data!.docs[index];
                       var data = doc.data();
-                      return widget.isRep
+                      return _isRep
                           ? Dismissible(
                               onDismissed: (direction) async {
                                 await FirebaseFirestore.instance
@@ -347,7 +358,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                 },
               ),
             ),
-            if (widget.isRep)
+            if (_isRep)
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
@@ -370,8 +381,8 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: UtilTab(isRep: widget.isRep),
+          padding: const EdgeInsets.only(bottom: 10),
+          child: const UtilTab(),
         ),
       ),
     );

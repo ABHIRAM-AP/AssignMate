@@ -85,9 +85,6 @@ class _SignUpPageState extends State<SignUpPage> {
         automaticallyImplyLeading: false,
         title: const Text(
           "Sign Up",
-          style: TextStyle(
-            color: Color(0xFFBC6C25),
-          ),
         ),
         leading: IconButton(
           icon: const Icon(

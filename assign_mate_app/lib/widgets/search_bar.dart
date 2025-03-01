@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 // TextField for Searching Assignments
 class SearchBarAssignments extends StatefulWidget {
-  SearchBarAssignments({super.key});
+  const SearchBarAssignments({super.key});
 
   @override
   State<SearchBarAssignments> createState() => _SearchBarAssignmentsState();

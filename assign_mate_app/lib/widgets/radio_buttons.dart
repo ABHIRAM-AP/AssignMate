@@ -8,12 +8,12 @@ class RadioOptionWidget extends StatelessWidget {
   final ValueChanged<String?> onChanged;
 
   const RadioOptionWidget({
-    Key? key,
+    super.key,
     required this.text,
     required this.value,
     required this.groupValue,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

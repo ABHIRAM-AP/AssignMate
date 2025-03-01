@@ -6,10 +6,10 @@ class AppTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: const Color(0xFFFAEDCD),
       centerTitle: true,
-      titleTextStyle: GoogleFonts.poppins(
+      titleTextStyle: GoogleFonts.itim(
         fontSize: 25,
         fontWeight: FontWeight.bold,
-        color: Colors.white,
+        color: const Color(0xFFBC6C25),
       ),
     ),
     scaffoldBackgroundColor: const Color(0xFFFAEDCD),

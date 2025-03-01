@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class InternalsCalc extends StatefulWidget {
-  final bool isRep;
-  const InternalsCalc({
-    super.key,
-    required this.isRep,
-  });
+  const InternalsCalc({super.key});
 
   @override
   State<InternalsCalc> createState() => _InternalsCalcState();
@@ -55,9 +51,9 @@ class _InternalsCalcState extends State<InternalsCalc> {
       showResultDialog("Attendance", "Enter a valid Attendance");
       return;
     } else {
-      if (attendanceMark >= 90 || attendanceMark <= 100) {
+      if (attendanceMark >= 90 && attendanceMark <= 100) {
         attendanceMark = 10;
-      } else if (attendanceMark < 90 || attendanceMark >= 80) {
+      } else if (attendanceMark >= 80 && attendanceMark < 90) {
         attendanceMark = 9;
       } else {
         attendanceMark = 8.5;
@@ -68,7 +64,7 @@ class _InternalsCalcState extends State<InternalsCalc> {
 
       double totalMarks = seriesAvg + attendanceMark + assignmentMark;
       showResultDialog(
-          "Internal Marks", "Your total internal marks: $totalMarks");
+          "Internal Marks", "Your total internal marks: $totalMarks.");
       resetFields();
     }
   }
@@ -130,6 +126,17 @@ class _InternalsCalcState extends State<InternalsCalc> {
     );
   }
 
+  Widget _buildTextFieldforInternals({
+    required TextEditingController controller,
+    required String hintText,
+  }) {
+    return TextField(
+      keyboardType: TextInputType.number,
+      controller: controller,
+      decoration: customInputDecoration(hintText),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,7 +157,7 @@ class _InternalsCalcState extends State<InternalsCalc> {
           ),
           onPressed: () {
             if (Navigator.canPop(context)) {
-              Navigator.pop(context, widget.isRep);
+              Navigator.pop(context);
             } else {
               Navigator.popUntil(context, (route) => route.isFirst);
             }
@@ -168,34 +175,24 @@ class _InternalsCalcState extends State<InternalsCalc> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 50),
-                      TextField(
-                        keyboardType: TextInputType.numberWithOptions(),
-                        controller: firstSeriesController,
-                        decoration:
-                            customInputDecoration("Enter First Series Marks:"),
-                      ),
+                      _buildTextFieldforInternals(
+                          controller: firstSeriesController,
+                          hintText: "Enter First Series Marks:"),
                       const SizedBox(height: 50),
-                      TextField(
-                        keyboardType: TextInputType.numberWithOptions(),
-                        controller: secondSeriesController,
-                        decoration:
-                            customInputDecoration("Enter Second Series Marks:"),
-                      ),
+                      _buildTextFieldforInternals(
+                          controller: secondSeriesController,
+                          hintText: "Enter Second Series Marks:"),
                       const SizedBox(height: 50),
-                      TextField(
-                        keyboardType: TextInputType.numberWithOptions(),
-                        controller: assignmentMarksController,
-                        decoration:
-                            customInputDecoration("Enter Assignment Marks:"),
-                      ),
+                      _buildTextFieldforInternals(
+                          controller: assignmentMarksController,
+                          hintText: "Enter Assignment Marks (out of 15):"),
                       const SizedBox(height: 50),
-                      TextField(
-                        keyboardType: TextInputType.numberWithOptions(),
-                        controller: attendanceController,
-                        decoration: customInputDecoration(
-                            "Enter Attendance in Percentage:"),
-                      ),
+                      _buildTextFieldforInternals(
+                          controller: attendanceController,
+                          hintText: "Enter Attendance in Percentage:"),
                       const SizedBox(height: 50),
+
+                      // Submit Button
                       ElevatedButton(
                         onPressed: calculateInternals,
                         style: ElevatedButton.styleFrom(
@@ -212,7 +209,6 @@ class _InternalsCalcState extends State<InternalsCalc> {
                               color: Colors.white),
                         ),
                       ),
-                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -223,8 +219,8 @@ class _InternalsCalcState extends State<InternalsCalc> {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: UtilTab(isRep: widget.isRep),
+          padding: const EdgeInsets.only(bottom: 10),
+          child: UtilTab(),
         ),
       ),
     );

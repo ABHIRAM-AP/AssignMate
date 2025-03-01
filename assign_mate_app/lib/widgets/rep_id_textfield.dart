@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RepIdTextfield extends StatefulWidget {
   final TextEditingController repidController;
@@ -18,6 +19,9 @@ class _RepIdTextfieldState extends State<RepIdTextfield> {
       controller: widget.repidController,
       decoration: InputDecoration(
         hintText: 'Enter Your Rep ID:',
+        hintStyle: GoogleFonts.itim(
+          fontSize: 19,
+        ),
       ),
       keyboardType: TextInputType.number,
     );

@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const AssignmentsScreen(isRep: false),
+          builder: (context) => AssignmentsScreen(),
         ),
       );
     } else {
