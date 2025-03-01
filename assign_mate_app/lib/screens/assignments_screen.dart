@@ -278,25 +278,31 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
               ),
             ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 30),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      'Assignments',
-                      style: GoogleFonts.inconsolata(
-                        fontSize: 30,
-                        color: const Color(0xFF606C38),
-                      ),
+                  padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.05),
+                  child: Text(
+                    'Assignments',
+                    style: GoogleFonts.inconsolata(
+                      fontSize: 30,
+                      color: const Color(0xFF606C38),
                     ),
                   ),
                 ),
-                Container(
-                  height: 1,
-                  width: 337,
-                  color: const Color(0xFFBC6C25),
-                )
+                Padding(
+                  padding: EdgeInsets.only(
+                          left: MediaQuery.of(context).size.width * 0.05)
+                      .copyWith(
+                    bottom: 10,
+                  ),
+                  child: Container(
+                    height: 1,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    color: const Color(0xFFBC6C25),
+                  ),
+                ),
               ],
             ),
             Expanded(

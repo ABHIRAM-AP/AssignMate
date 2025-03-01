@@ -1,3 +1,4 @@
+import 'package:assign_mate_app/services/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,7 @@ import 'package:assign_mate_app/theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  print(DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -38,7 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _initializeApp() async {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     if (!mounted) return;
 
     // Check authentication state after Firebase initializes
