@@ -1,0 +1,2 @@
+C:/Users/Abhiram/Documents/GitHub/AssignMate/assign_mate_app/android/app/.cxx/RelWithDebInfo/451a4942/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/Abhiram/Documents/GitHub/AssignMate/assign_mate_app/android/app/.cxx/RelWithDebInfo/451a4942/x86_64/CMakeFiles/rebuild_cache.dir

@@ -71,7 +71,7 @@ flutter:
 flutter_launcher_icons:
     android: true
     ios: true
-    image_path: "assign_mate_app/assets/AssignMate.png"
+    image_path: "assets/AssignMate.png"
     adaptive_icon_background: "#ffffff" 
     adaptive_icon_foreground: "assets/app_icon.png"
 
