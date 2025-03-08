@@ -35,18 +35,30 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
   Future<void> fetchUserName() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
-      if (user == null || user.email == null) {
+      if (user == null) {
         setState(() {
           userName = "Not Logged In";
         });
         return;
       }
-      String extractedName = user.email!.split('@')[0];
-      extractedName =
-          extractedName[0].toUpperCase() + extractedName.substring(1);
-      setState(() {
-        userName = extractedName;
-      });
+
+      // Fetch user document from Firestore
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('Students')
+          .doc(user.uid)
+          .get();
+
+      if (userDoc.exists && userDoc.data() != null) {
+        Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+
+        setState(() {
+          userName = userData['userName'] ?? "No Name Found";
+        });
+      } else {
+        setState(() {
+          userName = "No Name Found";
+        });
+      }
     } catch (e) {
       setState(() {
         userName = "Error Occurred";

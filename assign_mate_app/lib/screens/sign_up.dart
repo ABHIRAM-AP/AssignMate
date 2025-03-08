@@ -4,6 +4,7 @@ import 'package:assign_mate_app/widgets/email_id_textfield.dart';
 import 'package:assign_mate_app/widgets/password_textfield.dart';
 import 'package:assign_mate_app/widgets/radio_buttons.dart';
 import 'package:assign_mate_app/widgets/rep_id_textfield.dart';
+import 'package:assign_mate_app/widgets/user_name_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,6 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String? _role = 'student';
 
   late final TextEditingController emailidController;
+  late final TextEditingController userNameController;
   late final TextEditingController repidController;
   late final TextEditingController passwordController;
   final FirebaseAuthService _authService = FirebaseAuthService();
@@ -26,6 +28,7 @@ class _SignUpPageState extends State<SignUpPage> {
   void initState() {
     super.initState();
     emailidController = TextEditingController();
+    userNameController = TextEditingController();
     repidController = TextEditingController();
     passwordController = TextEditingController();
   }
@@ -33,6 +36,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void dispose() {
     emailidController.dispose();
+    userNameController.dispose();
     repidController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -58,6 +62,7 @@ class _SignUpPageState extends State<SignUpPage> {
       await _authService.signUpUser(
         email: emailidController.text.trim(),
         password: passwordController.text.trim(),
+        userName: userNameController.text.trim(),
         role: _role!,
         repId: _role == "rep" ? repidController.text.trim() : "101",
       );
@@ -122,6 +127,9 @@ class _SignUpPageState extends State<SignUpPage> {
                               emailidController: emailidController),
                           const SizedBox(height: 20),
 
+                          UserNameTextfield(
+                              userNameController: userNameController),
+                          const SizedBox(height: 20),
                           // Rep ID TextField (only for "Rep" role)
                           if (_role == 'rep')
                             RepIdTextfield(repidController: repidController),

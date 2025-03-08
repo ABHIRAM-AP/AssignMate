@@ -10,6 +10,7 @@ class FirebaseAuthService {
       {required String role,
       required email,
       required password,
+      required userName,
       required repId}) async {
     if (email.isEmpty || password.isEmpty) {
       throw Exception("Please enter both email and password");
@@ -30,6 +31,7 @@ class FirebaseAuthService {
             .doc(userCredential.user!.uid)
             .set({
           "email": email,
+          "userName": userName,
           "repId": repId ?? "N/A",
           "role": role,
         }, SetOptions(merge: true));
