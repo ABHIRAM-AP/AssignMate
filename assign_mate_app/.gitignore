@@ -48,3 +48,4 @@ app.*.map.json
 android/app/google-services.json
 firebase.json
 lib/screens/splash_screen.dart
+lib/screens/admin_screen.dart
