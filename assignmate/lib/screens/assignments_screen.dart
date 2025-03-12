@@ -32,6 +32,11 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
     _loadUserRole();
   }
 
+  String capitalizeFirstLetter(String text) {
+    if (text.isEmpty) return "No Name Found";
+    return text[0].toUpperCase() + text.substring(1);
+  }
+
   Future<void> fetchUserName() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -57,13 +62,15 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
         Map<String, dynamic> studentData =
             studentDoc.data() as Map<String, dynamic>;
         setState(() {
-          userName = studentData['userName'] ?? "No Name Found";
+          userName =
+              capitalizeFirstLetter(studentData['userName'] ?? "No Name Found");
         });
       } else if (classRepDoc.exists && classRepDoc.data() != null) {
         Map<String, dynamic> repData =
             classRepDoc.data() as Map<String, dynamic>;
         setState(() {
-          userName = repData['userName'] ?? "No Name Found";
+          userName =
+              capitalizeFirstLetter(repData['userName'] ?? "No Name Found");
         });
       } else {
         setState(() {
