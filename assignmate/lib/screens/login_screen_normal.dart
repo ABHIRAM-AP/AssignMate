@@ -3,7 +3,9 @@ import 'package:assignmate/screens/sign_up.dart';
 import 'package:assignmate/services/firebase_auth_services.dart';
 import 'package:assignmate/widgets/email_id_textfield.dart';
 import 'package:assignmate/widgets/password_textfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,6 +38,22 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.redAccent,
       ),
     );
+  }
+
+  Future<void> saveUserToken() async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    final user = FirebaseAuth.instance.currentUser;
+    debugPrint('User is ${user}\nToken:${fcmToken}');
+    if (fcmToken != null && user != null) {
+      await FirebaseFirestore.instance
+          .collection('fcmTokens')
+          .doc(user.uid)
+          .set({
+        'token': fcmToken,
+        'uid': user.uid,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
   }
 
   Future<void> loginUser() async {
