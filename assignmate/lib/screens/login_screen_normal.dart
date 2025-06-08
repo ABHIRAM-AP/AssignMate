@@ -44,14 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
     final fcmToken = await FirebaseMessaging.instance.getToken();
     final user = FirebaseAuth.instance.currentUser;
     debugPrint('User is ${user}\nToken:${fcmToken}');
-    if (fcmToken != null && user != null) {
+    if (fcmToken != null) {
       await FirebaseFirestore.instance
-          .collection('fcmTokens')
-          .doc(user.uid)
-          .set({
-        'token': fcmToken,
-        'uid': user.uid,
-        'timestamp': FieldValue.serverTimestamp(),
+          .collection('Students')
+          .doc(user?.uid)
+          .update({
+        'fcmToken': fcmToken,
       });
     }
   }
@@ -70,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-
+      saveUserToken();
       if (userCredential.user == null) {
         showSnackBar("Login failed. Please try again.");
         return;
