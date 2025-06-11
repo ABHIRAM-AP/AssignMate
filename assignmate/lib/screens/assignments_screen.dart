@@ -1,8 +1,14 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:assignmate/services/notifications_services.dart';
 import 'package:assignmate/widgets/util_tab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:assignmate/models/assignment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +23,7 @@ class AssignmentsScreen extends StatefulWidget {
 class _AssignmentsScreenState extends State<AssignmentsScreen> {
   String? userName;
   bool _isRep = false;
+  final NotificationsServices notificationsServices = NotificationsServices();
 
   late final TextEditingController assignmentController;
   late final TextEditingController dateController;
@@ -25,10 +32,19 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
   @override
   void initState() {
     super.initState();
-    fetchUserName();
+
     assignmentController = TextEditingController();
     dateController = TextEditingController();
 
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      final title = message.notification?.title ?? '';
+      final body = message.notification?.body ?? '';
+      debugPrint("Notification received: $title - $body");
+      if (title.isNotEmpty || body.isNotEmpty) {
+        notificationsServices.showLocalNotification(title: title, body: body);
+      }
+    });
+    fetchUserName();
     _loadUserRole();
   }
 
@@ -81,20 +97,6 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
       setState(() {
         userName = "Error Occurred: $e";
       });
-    }
-  }
-
-  Future<void> uploadAssignmentToDatabase(String name, DateTime dueDate) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
-      await FirebaseFirestore.instance.collection("Assignment_Subjects").add({
-        "Title": name,
-        "Date": Timestamp.fromDate(dueDate),
-        "repId": user.uid,
-      });
-    } catch (e) {
-      debugPrint(e.toString());
     }
   }
 
@@ -182,20 +184,57 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                       try {
                         DateTime dueDate = DateTime.parse(dateString);
 
-                        await uploadAssignmentToDatabase(name, dueDate);
+                        final url = Uri.parse(
+                            'https://assignmate-notifications-handler.onrender.com/add-assignment');
 
-                        setState(() {
-                          assignments.add(Assignment(name, dueDate));
-                        });
+                        final response = await http.post(
+                          url,
+                          headers: {'Content-Type': 'application/json'},
+                          body: json.encode({
+                            'title': name,
+                            'body':
+                                'Due on ${DateFormat('dd MMM yyyy').format(dueDate)}',
+                            'dueDate': dueDate.toIso8601String(),
+                          }),
+                        );
+                        if (!mounted) return;
+                        if (response.statusCode == 200) {
+                          final data = json.decode(response.body);
+                          if (!mounted) return;
+                          if (data['success']) {
+                            setState(() {
+                              assignments.add(Assignment(name, dueDate));
+                            });
 
-                        Navigator.of(context).pop();
-                        assignmentController.clear();
-                        dateController.clear();
+                            if (!mounted) return;
+
+                            Navigator.of(context).pop();
+                            assignmentController.clear();
+                            dateController.clear();
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text("Assignment added successfully")),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text("Error: ${data['message']}")),
+                            );
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    "Server error: ${response.statusCode}")),
+                          );
+                        }
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                               content:
-                                  Text("Invalid date format. Use YYYY-MM-DD.")),
+                                  Text("Invalid date format or error: $e")),
                         );
                       }
                     } else {
@@ -245,6 +284,24 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
         );
       },
     );
+  }
+
+  Future<void> sendAssignmentNotification(
+      String title, DateTime dueDate) async {
+    final response = await http.post(
+      Uri.parse(
+          'https://assignmate-notifications-handler.onrender.com/add-assignment'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'title': title,
+        'dueDate': dueDate.toIso8601String(),
+      }),
+    );
+    if (response.statusCode == 200) {
+      debugPrint("Notification sent successfully");
+    } else {
+      debugPrint("Failed to send notification: ${response.body}");
+    }
   }
 
   Widget _buildAssignmentData(Map<String, dynamic> data) {
@@ -359,7 +416,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       var doc = snapshot.data!.docs[index];
-                      var data = doc.data();
+                      Map<String, dynamic> data = doc.data();
 
                       return _isRep
                           ? Dismissible(

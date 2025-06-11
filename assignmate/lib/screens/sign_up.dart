@@ -1,5 +1,6 @@
 import 'package:assignmate/screens/login_screen_normal.dart';
 import 'package:assignmate/services/firebase_auth_services.dart';
+import 'package:assignmate/widgets/app_title.dart';
 import 'package:assignmate/widgets/email_id_textfield.dart';
 import 'package:assignmate/widgets/password_textfield.dart';
 import 'package:assignmate/widgets/radio_buttons.dart';
@@ -110,13 +111,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      "AssignMate",
-                      style: GoogleFonts.itim(
-                          color: const Color(0xFFBC6C25),
-                          fontSize: 58,
-                          fontWeight: FontWeight.w400),
-                    ),
+                    const AppTitle(),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0)
                           .copyWith(bottom: 20),

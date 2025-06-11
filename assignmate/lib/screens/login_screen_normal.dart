@@ -1,13 +1,12 @@
 import 'package:assignmate/screens/assignments_screen.dart';
-import 'package:assignmate/screens/sign_up.dart';
 import 'package:assignmate/services/firebase_auth_services.dart';
+import 'package:assignmate/widgets/app_title.dart';
 import 'package:assignmate/widgets/email_id_textfield.dart';
+import 'package:assignmate/widgets/login_button.dart';
 import 'package:assignmate/widgets/password_textfield.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:assignmate/widgets/sign_up_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -40,20 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> saveUserToken() async {
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    final user = FirebaseAuth.instance.currentUser;
-    debugPrint('User is ${user}\nToken:${fcmToken}');
-    if (fcmToken != null) {
-      await FirebaseFirestore.instance
-          .collection('Students')
-          .doc(user?.uid)
-          .update({
-        'fcmToken': fcmToken,
-      });
-    }
-  }
-
   Future<void> loginUser() async {
     String email = emailidController.text.trim();
     String password = passwordController.text.trim();
@@ -68,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      saveUserToken();
+      _authService.saveUserToken();
       if (userCredential.user == null) {
         showSnackBar("Login failed. Please try again.");
         return;
@@ -81,6 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isRep', isRep);
+        if (!mounted) return;
 
         Navigator.pushReplacement(
           context,
@@ -120,69 +106,30 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      "AssignMate",
-                      style: GoogleFonts.itim(
-                        color: Color(0xFFBC6C25),
-                        fontSize: 58,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
+                    const AppTitle(),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0)
                           .copyWith(bottom: 20),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          // Email Field
                           EmailIdTextfield(
                               emailidController: emailidController),
                           const SizedBox(height: 20),
+
+                          // Password Field
                           PasswordTextfield(
                               passwordController: passwordController),
                           const SizedBox(height: 30),
 
                           // Login Button
-                          SizedBox(
-                            width: 264,
-                            child: ElevatedButton(
-                              onPressed: _isLoading ? null : loginUser,
-                              child: _isLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white)
-                                  : Text(
-                                      "Login",
-                                      style: GoogleFonts.itim(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 22,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                            ),
-                          ),
+                          LoginButton(
+                              isLoading: _isLoading, onPressed: loginUser),
                           const SizedBox(height: 15),
 
-                          // Navigation to Sign Up Page
-                          SizedBox(
-                            width: double.infinity,
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const SignUpPage(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "Don't have an account? Sign Up",
-                                style: GoogleFonts.itim(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 19,
-                                  color: const Color(0xFF283618),
-                                ),
-                              ),
-                            ),
-                          ),
+                          // Sign Up Button
+                          const SignUpButton(),
                         ],
                       ),
                     ),

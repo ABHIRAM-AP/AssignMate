@@ -1,13 +1,26 @@
 import 'package:assignmate/screens/assignments_screen.dart';
 import 'package:assignmate/screens/login_screen_normal.dart';
 import 'package:assignmate/services/firebase_options.dart';
+import 'package:assignmate/services/notifications_services.dart';
 import 'package:assignmate/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  const InitializationSettings initSettings = InitializationSettings(
+    android: androidSettings,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initSettings,
+  );
 
   runApp(const MyApp());
 }
@@ -33,6 +46,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late final NotificationsServices notificationService;
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+
+    notificationService = NotificationsServices();
+
+    await notificationService.initNotifications();
+
     if (!mounted) return;
 
     // Check authentication state after Firebase initializes
@@ -51,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const AssignmentsScreen(),
+          builder: (_) => const AssignmentsScreen(),
         ),
       );
     } else {
@@ -59,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const LoginScreen(),
+          builder: (_) => const LoginScreen(),
         ),
       );
     }

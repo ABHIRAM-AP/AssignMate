@@ -1,10 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> saveUserToken() async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (fcmToken != null) {
+      await FirebaseFirestore.instance
+          .collection('Students')
+          .doc(user?.uid)
+          .update({
+        'fcmToken': fcmToken,
+      });
+    }
+  }
 
   Future<void> signUpUser(
       {required String role,
